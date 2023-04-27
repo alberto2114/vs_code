@@ -7,6 +7,8 @@ let gameState = {
     update: gameUpdate
 };
 
+
+
 let platform;
 let threads;
 let n_webs = 10;
@@ -61,4 +63,15 @@ function thread_creator(n_webs){
         thread_pos_array.push(thread_pos);
     }
     console.log(thread_pos_array);
+}
+
+class OptionsMenu extends Phaser.ScaleManager{
+    start(){
+        const ui = new game.UI();
+
+        const options = UI.addFolder('Options Menu');
+        options.add(this.slider, 'webs', 0, 1);
+        
+        options.open();
+    }
 }
