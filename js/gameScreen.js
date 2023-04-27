@@ -25,3 +25,7 @@ function initialiseGame(){
 function gameUpdate(){
     
 }
+
+function endGame(){
+    game.state.start('final');
+}
