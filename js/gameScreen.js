@@ -9,8 +9,13 @@ let gameState = {
 
 let platform;
 let threads;
-let n_webs = 10;
+let n_webs = 6;
 let x_thread = 800/n_webs;
+let thread_pos_array;
+let character;
+let characterIndex;
+let gameOver;
+let cursors;
 
 game.state.add('menu', startState);
 game.state.add('game', gameState);
@@ -24,6 +29,7 @@ function loadAssets() {
     game.load.image('sky', 'assets/sky.png');
     game.load.image('ground', 'assets/ground.png');
     game.load.image('thread', 'assets/string.png');
+    game.load.image('character', 'assets/descarga.png');
 }
 function initialiseGame(){
     game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -41,15 +47,39 @@ function initialiseGame(){
 
     thread_creator(n_webs);
 
+    characterIndex = 0;
+    
+    character = game.add.sprite(thread_pos_array[characterIndex],game.world.height - 32,'character');
+    character.scale.setTo(2,2);
+    game.physics.arcade.enable(character);
+
+    cursors = game.input.keyboard.createCursorKeys();
 }
 
 function gameUpdate(){
     
+
+    if(cursors.left.isDown && characterIndex > 0){
+        //left movement
+        console.log('left');
+        characterIndex--;
+        character.body.position.setTo(thread_pos_array[characterIndex],game.world.height - 32 );
+        
+    } else if(cursors.right.isDown && characterIndex < n_webs-2){
+        //right movement
+        console.log('right');
+        characterIndex++;
+        character.body.position.setTo(thread_pos_array[characterIndex],game.world.height - 32 );
+        
+
+    }
+    
+    
 }
 
 function thread_creator(n_webs){
-    let thread_pos = game.world.width/n_webs;
-    let thread_pos_array = [thread_pos];
+    let thread_pos = game.world.width/n_webs - 16;
+    thread_pos_array = [thread_pos];
 
     for (let i = 1; i < n_webs; i++) {
         const actual_thread = i;
