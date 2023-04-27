@@ -24,8 +24,6 @@ function loadAssets() {
     game.load.image('sky', 'assets/sky.png');
     game.load.image('ground', 'assets/ground.png');
     game.load.image('thread', 'assets/string.png');
-    //test
-    game.load.image('character', 'assets/playButton.png');
 }
 function initialiseGame(){
     game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -43,7 +41,6 @@ function initialiseGame(){
 
     thread_creator(n_webs);
 
-    let character = create(thread_pos_array[0], 300, 'character');
 }
 
 function gameUpdate(){
