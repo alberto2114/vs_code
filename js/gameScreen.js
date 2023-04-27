@@ -14,6 +14,7 @@ let x_thread = 800/n_webs;
 let thread_pos_array;
 let character;
 let characterIndex;
+let freeInput = true;
 let gameOver;
 let cursors;
 
@@ -59,22 +60,28 @@ function initialiseGame(){
 function gameUpdate(){
     
 
-    if(cursors.left.isDown && characterIndex > 0){
+    if(cursors.left.isDown && characterIndex > 0 && freeInput ==true){
         //left movement
         console.log('left');
         characterIndex--;
         character.body.position.setTo(thread_pos_array[characterIndex],game.world.height - 32 );
-        
-    } else if(cursors.right.isDown && characterIndex < n_webs-2){
+        freeInput=false;
+        game.time.events.add(200, inputChorno,this);
+    } else if(cursors.right.isDown && characterIndex < n_webs-2 && freeInput ==true){
         //right movement
         console.log('right');
         characterIndex++;
         character.body.position.setTo(thread_pos_array[characterIndex],game.world.height - 32 );
-        
+        freeInput=false;
+        game.time.events.add(400, inputChorno,this);
 
     }
     
     
+}
+
+function inputChorno(){
+freeInput = true;
 }
 
 function thread_creator(n_webs){
