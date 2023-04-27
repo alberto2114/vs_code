@@ -11,6 +11,10 @@ let platform;
 let threads;
 let n_webs = 10;
 let x_thread = 800/n_webs;
+//Alberto
+var tiempoTexto;
+var tiempoTranscurrido = 0;
+var puntuaje = 0;
 
 game.state.add('menu', startState);
 game.state.add('game', gameState);
@@ -25,6 +29,8 @@ function loadAssets() {
     game.load.image('ground', 'assets/ground.png');
     game.load.image('thread', 'assets/string.png');
 }
+
+
 function initialiseGame(){
     game.physics.startSystem(Phaser.Physics.ARCADE);
 
@@ -40,11 +46,37 @@ function initialiseGame(){
     threads.enableBody = true;
 
     thread_creator(n_webs);
-
+//Alberto
+    tiempoTexto = this.add.text(3,10, "00:00:00", {font: "20px Arial", fill: "white", stroke: "black", strokeThickness:4});
+    textoPuntuaje = this.add.text(3,40, "Points: 0", {font: "20px Arial", fill: "white", stroke: "black", strokeThickness:4});
 }
 
+//Alberto
+function actualizarCronometro(){
+    tiempoTranscurrido++;
+    var horas = Math.floor(tiempoTranscurrido/3600);
+    var minutos = Math.floor((tiempoTranscurrido-(horas * 3600))/60);
+    var segundos = Math.floor(tiempoTranscurrido - (horas*3600)-(minutos * 60));
+    var tiempoTextoFormateado = horas.toString().padStart(2, "0")+":"+minutos.toString().padStart(2, "0")+":"+segundos.toString().padStart(2, "0");
+    tiempoTexto.setText(tiempoTextoFormateado);
+}
+
+var crono = setInterval(actualizarCronometro, 1000);
+
+function update(){
+    
+}
 function gameUpdate(){
     
+}
+
+//Alberto
+function sumarPuntos(){
+    puntuaje +=10;
+    textoPuntuaje.setText("Points: "+puntuaje);
+    clearInterval(crono);
+    console.log("Has durado: " + tiempoTexto.text);
+    console.log("Has conseguido " + puntuaje + " puntos")
 }
 
 function thread_creator(n_webs){
@@ -62,3 +94,6 @@ function thread_creator(n_webs){
     }
     console.log(thread_pos_array);
 }
+
+//Cuando vidas 0 colocremos clearInterval(crono); y se pausara el crono
+//Cuando destruyamos algo usamos la funcion sumarPuntos() y sumara 10 puntos el juego.
