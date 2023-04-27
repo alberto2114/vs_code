@@ -22,10 +22,12 @@ function initializeGame() {
     game.input.enabled = true;
     game.stage.backgroundColor = "#fa0";
 
-    let button = game.add.button(130, 200, '', changePlay);
-    button.addChild(game.add.text(0, 0, "START GAME", {fontSize: '32px', fill: '#FFFFFF', backgroundColor: '#ADD8E6', hoverColor: '#87CEFA', padding:{x: 16, y: 8}}));
+    let playButton = game.add.button(130, 200, '', changePlay);
+    playButton.addChild(game.add.text(0, 0, "START GAME", {fontSize: '32px', fill: '#FFFFFF', backgroundColor: '#ADD8E6', hoverColor: '#87CEFA', padding:{x: 16, y: 8}}));
     
-    
+    let optionsButton = game.add.button(130,400,'',changeOptions);
+    optionsButton.addChild(game.add.text(0, 0, "OPTIONS MENU", {fontSize: '32px', fill: '#FFFFFF', backgroundColor: '#ADD8E6', hoverColor: '#87CEFA', padding:{x: 16, y: 8}}));
+
     //game.add.sprite(0, 0, 'sky');
     //buttonPlay = new Button(0.5,0.45,'playButton', changePlay);
     //playButton = game.add.button(game.world.centerX, game.world.centerY, 'playButton', this.changePlay, this);
@@ -33,5 +35,10 @@ function initializeGame() {
 
 function changePlay() {
     game.state.start('game');
+}
+
+function changeOptions(){
+    console.log('opcionesfuncion');
+    game.state.start('options');
 }
 

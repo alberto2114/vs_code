@@ -8,9 +8,10 @@ let gameState = {
 };
 
 game.state.add('menu', startState);
+game.state.add('options', optionState);
 game.state.add('game', gameState);
-//game.state.add('final', finalState);
-//game.state.add('options', optionState);
+game.state.add('final', finalState);
+
 
 game.state.start('menu');
 

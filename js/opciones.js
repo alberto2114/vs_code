@@ -2,6 +2,13 @@
 
 let optionState = {
     preload:preloadAssets,
-    create:initializeGame,
-    update:updateGame,
+    create:initialiseGame,
 };
+
+function preloadAssets(){
+
+}
+
+function initialiseGame(){
+console.log("en opciones");
+}

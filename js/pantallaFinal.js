@@ -2,6 +2,11 @@
 
 let finalState = {
     preload:preloadAssets,
-    create:initializeGame,
+    create:initialiseGame,
     update:updateGame,
 };
+
+
+function initialiseGame(){
+    
+}
