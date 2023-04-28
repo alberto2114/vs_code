@@ -14,6 +14,11 @@ let threads;
 let n_webs = 10;
 let x_thread = 800/n_webs;
 
+var options;
+var optionsMenu;
+var sliderCheck;
+var sliderBar;
+
 game.state.add('menu', startState);
 game.state.add('game', gameState);
 //game.state.add('final', finalState);
@@ -26,11 +31,21 @@ function loadAssets() {
     game.load.image('sky', 'assets/sky.png');
     game.load.image('ground', 'assets/ground.png');
     game.load.image('thread', 'assets/string.png');
+
+    game.load.image('options', 'assets/ui/options.png');
+    game.load.image('optionsmenu', 'assets/ui/red_panel.png');
+    game.load.image('sliderBox', 'assets/ui/red_button10.png')
+    game.load.image('sliderBar', 'assets/ui/grey_sliderHorizontal.png');
+    game.load.image('sliderCheck', 'assets/ui/grey_sliderDown.png');
 }
 function initialiseGame(){
     game.physics.startSystem(Phaser.Physics.ARCADE);
 
     game.add.sprite(0, 0, 'sky');
+
+    threads = game.add.group();
+    threads.enableBody = true;
+    thread_creator(n_webs);
 
     platform = game.add.group();
     platform.enableBody = true;
@@ -38,11 +53,28 @@ function initialiseGame(){
     let ground = platform.create(0, game.world.height - 32, 'ground');
     ground.body.immovable = true;
 
-    threads = game.add.group();
-    threads.enableBody = true;
+    options = game.add.sprite(game.world.width -42, 8, 'options'); //options icon
+    options.scale.setTo(0.5);
+    options.inputEnabled = true;
+    options.events.onInputDown.add(showMenu, this);
 
-    thread_creator(n_webs);
+    optionsMenu = game.add.sprite(game.world.width/2, game.world.height/2, 'optionsmenu');
+    optionsMenu.scale.setTo(3);
+    optionsMenu.anchor.set(0.5, 0.5);
+    optionsMenu.visible = true;
 
+    sliderBar = game.add.sprite(game.world.width/2 - 130, game.world.height/2 - 100, 'sliderBar');
+    sliderBar.scale.setTo(1.3, 1)
+    sliderBar.visible = true;
+
+    sliderCheck = game.add.sprite(game.world.width/2 - 130, game.world.height/2 - 110, 'sliderCheck');
+    sliderCheck.scale.setTo(0.7);
+    sliderCheck.inputEnabled = true;
+    sliderCheck.events.onInputDown.add(slideCheck, this);
+    
+    //sliderCheck.input.addMoveCallBack(slideCheck, this);
+    
+    sliderCheck.visible = true;
 }
 
 function gameUpdate(){
@@ -65,13 +97,32 @@ function thread_creator(n_webs){
     console.log(thread_pos_array);
 }
 
-class OptionsMenu extends Phaser.ScaleManager{
-    start(){
-        const ui = new game.UI();
+function showMenu(){
+    console.log('muestra menu');
 
-        const options = UI.addFolder('Options Menu');
-        options.add(this.slider, 'webs', 0, 1);
-        
-        options.open();
+    if(optionsMenu.visible == true){
+        optionsMenu.visible = false;
+        sliderCheck.visible = false;
+        sliderBar.visible = false;
+    }
+    else{
+        optionsMenu.visible = true;
+        sliderCheck.visible = true;
+        sliderBar.visible = true;
+    }
+}
+
+function slideCheck(){
+    console.log('me muevo?');
+    var x_limit = game.world.width/2
+
+    sliderCheck.input.draggable = true;
+    sliderCheck.input.allowVerticalDrag = false;
+
+    if(sliderCheck.position.x < (x_limit - 130)){
+        sliderCheck.position.x = x_limit - 130;
+    } 
+    else if(sliderCheck.position.x > (x_limit)){
+        slideCheck.position.x = x_limit;
     }
 }
