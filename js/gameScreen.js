@@ -33,6 +33,7 @@ function loadAssets() {
     game.load.image('thread', 'assets/string.png');
 
     game.load.image('options', 'assets/ui/options.png');
+    
     game.load.image('optionsmenu', 'assets/ui/red_panel.png');
     game.load.image('sliderBox', 'assets/ui/red_button10.png')
     game.load.image('sliderBar', 'assets/ui/grey_sliderHorizontal.png');
@@ -82,6 +83,7 @@ function gameUpdate(){
 }
 
 function thread_creator(n_webs){
+    threads.removeAll();
     let thread_pos = game.world.width/n_webs;
     let thread_pos_array = [thread_pos];
 
@@ -112,17 +114,37 @@ function showMenu(){
     }
 }
 
-function slideCheck(){
-    console.log('me muevo?');
-    var x_limit = game.world.width/2
+function slideCheck() {
+    var x_limit = game.world.width / 2;
+    var n_webs_min = 4;
+    var n_webs_max = 10;
+  
+    if (sliderCheck) {
+        sliderCheck.input.draggable = true;
+        sliderCheck.input.allowVerticalDrag = false;
+    
+        if (sliderCheck.position.x < (x_limit - 130)) {
+            sliderCheck.position.x = x_limit - 130;
+        }
+        if (sliderCheck.position.x > (x_limit + 100)) {
+            sliderCheck.position.x = x_limit + 100;
+        }
+    
+        // map the x-coordinate of the sprite to a range of values for new_n_webs
+        var x = Phaser.Math.clamp(sliderCheck.x, x_limit - 130, x_limit + 100);
+        var range = x_limit + 900;
+        var n_webs_normalized = (x - (x_limit - 130)) / range;
+        var new_n_webs = Phaser.Math.clamp(Phaser.Math.linearInterpolation(
+            [n_webs_min, n_webs_max],
+            n_webs_normalized * (n_webs_max - n_webs_min)
+            ),
+            n_webs_min,
+            n_webs_max
+        );
 
-    sliderCheck.input.draggable = true;
-    sliderCheck.input.allowVerticalDrag = false;
+        new_n_webs = Math.round(new_n_webs);
 
-    if(sliderCheck.position.x < (x_limit - 130)){
-        sliderCheck.position.x = x_limit - 130;
-    } 
-    else if(sliderCheck.position.x > (x_limit)){
-        slideCheck.position.x = x_limit;
+        thread_creator(new_n_webs);
+        //console.log(game.n_webs);
     }
-}
+  }
