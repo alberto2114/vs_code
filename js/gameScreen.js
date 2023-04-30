@@ -1,4 +1,3 @@
-
 let game = new Phaser.Game(800, 600, Phaser.AUTO, 'game');
 
 let gameState = {
@@ -7,17 +6,20 @@ let gameState = {
     update: gameUpdate
 };
 
-
-
 let platform;
 let threads;
 let n_webs = 10;
 let x_thread = 800/n_webs;
 
 var options;
+//import { showMenu } from "js/ui.js";
 var optionsMenu;
 var sliderCheck;
 var sliderBar;
+var menuBox;
+
+var music;
+var musicButton;
 
 game.state.add('menu', startState);
 game.state.add('game', gameState);
@@ -35,9 +37,14 @@ function loadAssets() {
     game.load.image('options', 'assets/ui/options.png');
     
     game.load.image('optionsmenu', 'assets/ui/red_panel.png');
-    game.load.image('sliderBox', 'assets/ui/red_button10.png')
+    game.load.image('sliderBox', 'assets/ui/red_button10.png');
+    game.load.image('menuBox', 'assets/ui/red_button11.png');
     game.load.image('sliderBar', 'assets/ui/grey_sliderHorizontal.png');
     game.load.image('sliderCheck', 'assets/ui/grey_sliderDown.png');
+
+    //Music in the background thanks to https://www.FesliyanStudios.com
+    //Tittle: Retro Platforming - David Fesliyan
+    game.load.audio('music', ['assets/music/platformer.mp3']);
 }
 function initialiseGame(){
     game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -64,16 +71,20 @@ function initialiseGame(){
     optionsMenu.anchor.set(0.5, 0.5);
     optionsMenu.visible = true;
 
+    menuBox = game.add.sprite(game.world.width/2 - 135, game.world.height/2 - 120, 'menuBox');
+    menuBox.scale.setTo(1.4, 1);
+
     sliderBar = game.add.sprite(game.world.width/2 - 130, game.world.height/2 - 100, 'sliderBar');
-    sliderBar.scale.setTo(1.3, 1)
+    sliderBar.scale.setTo(1.3, 1);
     sliderBar.visible = true;
 
     sliderCheck = game.add.sprite(game.world.width/2 - 130, game.world.height/2 - 110, 'sliderCheck');
     sliderCheck.scale.setTo(0.7);
     sliderCheck.inputEnabled = true;
     sliderCheck.events.onInputDown.add(slideCheck, this);
-    
-    //sliderCheck.input.addMoveCallBack(slideCheck, this);
+
+    music = game.add.audio('music');
+    music.play();
     
     sliderCheck.visible = true;
 }
@@ -118,33 +129,45 @@ function slideCheck() {
     var x_limit = game.world.width / 2;
     var n_webs_min = 4;
     var n_webs_max = 10;
+    var sliderValueText;
   
-    if (sliderCheck) {
-        sliderCheck.input.draggable = true;
-        sliderCheck.input.allowVerticalDrag = false;
-    
-        if (sliderCheck.position.x < (x_limit - 130)) {
-            sliderCheck.position.x = x_limit - 130;
-        }
-        if (sliderCheck.position.x > (x_limit + 100)) {
-            sliderCheck.position.x = x_limit + 100;
-        }
-    
-        // map the x-coordinate of the sprite to a range of values for new_n_webs
-        var x = Phaser.Math.clamp(sliderCheck.x, x_limit - 130, x_limit + 100);
-        var range = x_limit + 900;
-        var n_webs_normalized = (x - (x_limit - 130)) / range;
-        var new_n_webs = Phaser.Math.clamp(Phaser.Math.linearInterpolation(
-            [n_webs_min, n_webs_max],
-            n_webs_normalized * (n_webs_max - n_webs_min)
-            ),
-            n_webs_min,
-            n_webs_max
-        );
+    sliderCheck.input.draggable = true;
+    sliderCheck.input.allowVerticalDrag = false;
 
-        new_n_webs = Math.round(new_n_webs);
-
-        thread_creator(new_n_webs);
-        //console.log(game.n_webs);
+    if (sliderCheck.position.x < (x_limit - 130)) {
+        sliderCheck.position.x = x_limit - 130;
     }
+    if (sliderCheck.position.x > (x_limit + 100)) {
+        sliderCheck.position.x = x_limit + 100;
+    }
+
+    // map the x-coordinate of the sprite to a range of values for new_n_webs
+    var x = Phaser.Math.clamp(sliderCheck.x, x_limit - 130, x_limit + 100);
+    var range = x_limit + 900;
+    var n_webs_normalized = (x - (x_limit - 130)) / range;
+    var new_n_webs = Phaser.Math.clamp(Phaser.Math.linearInterpolation(
+        [n_webs_min, n_webs_max],
+        n_webs_normalized * (n_webs_max - n_webs_min)
+        ),
+        n_webs_min,
+        n_webs_max
+    );
+
+    new_n_webs = Math.round(new_n_webs);
+
+    var someText = game.add.text(x_limit - 130, sliderCheck.y - 30, 'Number of webs',
+        {font: '16px Fantasy',
+        fill: '#FFFFFF',
+        align: 'center'});
+
+    sliderValueText = game.add.text(x_limit - 10, sliderCheck.y + 40, new_n_webs - 1,
+        {font: '32px Fantasy',
+        fill: '#FFFFFF',
+        backgroundColor: '#e86a17',
+        stroke: '#000000',
+        strokeThickness: 6,
+        align: 'center'});
+
+    thread_creator(new_n_webs);
+    //console.log(game.n_webs);
   }
