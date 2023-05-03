@@ -1,4 +1,5 @@
-/*var optionsMenu;
+/*var options;
+var optionsMenu;
 var sliderCheck;
 var sliderBar;
 var menuBox;
@@ -7,6 +8,8 @@ var music;
 var musicButton;
 
 function loadAssets() {
+    game.load.image('options', 'assets/ui/options.png');
+
     game.load.image('optionsmenu', 'assets/ui/red_panel.png');
     game.load.image('sliderBox', 'assets/ui/red_button10.png')
     game.load.image('sliderBar', 'assets/ui/grey_sliderHorizontal.png');
@@ -16,8 +19,14 @@ function loadAssets() {
     //Tittle: Retro Platforming - David Fesliyan
     game.load.audio('music', ['assets/music/platformer.mp3']);
 }
+// a lo mejor si le meto game como parametro de la funcion tira
+//del palo initialiseGame(game) XD
+function initialiseGame(game){
+    options = game.add.sprite(game.world.width -42, 8, 'options'); //options icon
+    options.scale.setTo(0.5);
+    options.inputEnabled = true;
+    options.events.onInputDown.add(showMenu, this);
 
-function initialiseGame(){
     optionsMenu = game.add.sprite(game.world.width/2, game.world.height/2, 'optionsmenu');
     optionsMenu.scale.setTo(3);
     optionsMenu.anchor.set(0.5, 0.5);
@@ -55,8 +64,7 @@ function showMenu(){
         sliderBar.visible = true;
     }
 }
-export {showMenu};
-
+/*
 function slideCheck() {
     var x_limit = game.world.width / 2;
     var n_webs_min = 4;
@@ -102,6 +110,4 @@ function slideCheck() {
 
     thread_creator(new_n_webs);
     //console.log(game.n_webs);
-  }
-
-  export {slideCheck};*/
+  }*/

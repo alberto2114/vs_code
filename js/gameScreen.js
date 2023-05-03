@@ -12,14 +12,18 @@ let n_webs = 10;
 let x_thread = 800/n_webs;
 
 var options;
-//import { showMenu } from "js/ui.js";
 var optionsMenu;
 var sliderCheck;
 var sliderBar;
 var menuBox;
+var someText;
 
 var music;
 var musicButton;
+var someMusicText;
+
+var moveWASD;
+var moveMOUSE;
 
 game.state.add('menu', startState);
 game.state.add('game', gameState);
@@ -42,6 +46,12 @@ function loadAssets() {
     game.load.image('sliderBar', 'assets/ui/grey_sliderHorizontal.png');
     game.load.image('sliderCheck', 'assets/ui/grey_sliderDown.png');
 
+    game.load.image('buttonCheck_NO', 'assets/ui/grey_boxCheckmark.png');
+    game.load.image('buttonCheck_YES', 'assets/ui/red_boxCheckmark.png');
+
+    game.load.image('selectorOFF', 'assets/ui/grey_circle.png');
+    game.load.image('selectorON', 'assets/ui/red_boxTick.png');
+
     //Music in the background thanks to https://www.FesliyanStudios.com
     //Tittle: Retro Platforming - David Fesliyan
     game.load.audio('music', ['assets/music/platformer.mp3']);
@@ -61,32 +71,64 @@ function initialiseGame(){
     let ground = platform.create(0, game.world.height - 32, 'ground');
     ground.body.immovable = true;
 
+    //gear button
     options = game.add.sprite(game.world.width -42, 8, 'options'); //options icon
     options.scale.setTo(0.5);
     options.inputEnabled = true;
+    //options.events.onInputOver.loadTexture('menuBox'); trying some thing XD
     options.events.onInputDown.add(showMenu, this);
-
+    //options panel
     optionsMenu = game.add.sprite(game.world.width/2, game.world.height/2, 'optionsmenu');
     optionsMenu.scale.setTo(3);
     optionsMenu.anchor.set(0.5, 0.5);
-    optionsMenu.visible = true;
-
+    optionsMenu.visible = false;
+    //options extra box
     menuBox = game.add.sprite(game.world.width/2 - 135, game.world.height/2 - 120, 'menuBox');
     menuBox.scale.setTo(1.4, 1);
-
+    menuBox.visible = false;
+    //options slider-bar
     sliderBar = game.add.sprite(game.world.width/2 - 130, game.world.height/2 - 100, 'sliderBar');
     sliderBar.scale.setTo(1.3, 1);
-    sliderBar.visible = true;
-
+    sliderBar.visible = false;
+    //options slider
     sliderCheck = game.add.sprite(game.world.width/2 - 130, game.world.height/2 - 110, 'sliderCheck');
     sliderCheck.scale.setTo(0.7);
     sliderCheck.inputEnabled = true;
-    sliderCheck.events.onInputDown.add(slideCheck, this);
+    sliderCheck.events.onInputUp.add(handleSliderCheck, this);;
+    sliderCheck.visible = false;
+    //text corresponding to the number of webs showing
+    someText = game.add.text((game.world.width / 2) - 130, sliderCheck.y - 30, 'Number of webs',
+        {font: '16px Fantasy',
+        fill: '#FFFFFF',
+        align: 'center'});
+    someText.visible = false;
 
-    music = game.add.audio('music');
-    music.play();
     
-    sliderCheck.visible = true;
+    //some music
+    music = game.add.audio('music');
+    //music.play(); DECOMMENT BEFORE PUSH **************************
+    //buttons corresponding to turning on/off music
+    musicButton = game.add.sprite(game.world.width/2 - 40, game.world.height/2 - 20, 'buttonCheck_YES');
+    musicButton.inputEnabled = true;
+    musicButton.events.onInputDown.add(turnMusic, this);
+    musicButton.visible = false;
+    //some text corresponding to the music
+    someMusicText = game.add.text((game.world.width / 2) - 130, game.world.height/2 - 20, 'Music:',
+        {font: '32px Fantasy',
+        fill: '#FFFFFF',
+        align: 'center'});
+    someMusicText.visible = false;
+
+    //selectable movement WASD
+    moveWASD = game.add.sprite(game.world.width/2 - 60, game.world.height/2 + 50, 'selectorON');
+    moveWASD.inputEnabled = true;
+    moveWASD.events.onInputDown.add(playWASD, this);
+    moveWASD.visible = false;
+    //selectable movement MOUSE
+    moveMOUSE = game.add.sprite(game.world.width/2, game.world.height/2 + 50, 'selectorOFF');
+    moveMOUSE.inputEnabled = true;
+    moveMOUSE.events.onInputDown.add(playMOUSE, this);
+    moveMOUSE.visible = false;
 }
 
 function gameUpdate(){
@@ -117,15 +159,31 @@ function showMenu(){
         optionsMenu.visible = false;
         sliderCheck.visible = false;
         sliderBar.visible = false;
+        menuBox.visible = false;
+        someText.visible = false;
+
+        musicButton.visible = false;
+        someMusicText.visible = false;
+
+        moveWASD.visible = false;
+        moveMOUSE.visible = false;
     }
     else{
         optionsMenu.visible = true;
         sliderCheck.visible = true;
         sliderBar.visible = true;
+        menuBox.visible = true;
+        someText.visible = true;
+
+        musicButton.visible = true;
+        someMusicText.visible = true;
+
+        moveWASD.visible = true;
+        moveMOUSE.visible = true;
     }
 }
 
-function slideCheck() {
+function handleSliderCheck() {
     var x_limit = game.world.width / 2;
     var n_webs_min = 4;
     var n_webs_max = 10;
@@ -155,11 +213,6 @@ function slideCheck() {
 
     new_n_webs = Math.round(new_n_webs);
 
-    var someText = game.add.text(x_limit - 130, sliderCheck.y - 30, 'Number of webs',
-        {font: '16px Fantasy',
-        fill: '#FFFFFF',
-        align: 'center'});
-
     sliderValueText = game.add.text(x_limit - 10, sliderCheck.y + 40, new_n_webs - 1,
         {font: '32px Fantasy',
         fill: '#FFFFFF',
@@ -168,6 +221,34 @@ function slideCheck() {
         strokeThickness: 6,
         align: 'center'});
 
+    game.time.events.add(Phaser.Timer.SECOND * 2, function() {
+        sliderValueText.destroy();});
+
     thread_creator(new_n_webs);
     //console.log(game.n_webs);
+  }
+
+  function turnMusic(){
+    if(music.isPlaying == true){
+        music.fadeOut(); 
+        musicButton.loadTexture('buttonCheck_NO');
+    }
+    else{
+        music.fadeIn();
+        musicButton.loadTexture('buttonCheck_YES');
+    }
+  }
+
+  function playWASD(){
+    moveWASD.loadTexture('selectorON');
+    moveMOUSE.loadTexture('selectorOFF');
+    //insert code WASD here
+
+  }
+
+  function playMOUSE(){
+    moveMOUSE.loadTexture('selectorON');
+    moveWASD.loadTexture('selectorOFF');
+    //insert code MOUSE here
+
   }
