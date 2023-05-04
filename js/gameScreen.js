@@ -9,7 +9,7 @@ let gameState = {
 
 let platform;
 let threads;
-let n_webs = 6;
+let n_webs = 9;
 let x_thread = 800/n_webs;
 
 let thread_pos_array;
@@ -45,7 +45,7 @@ function loadAssets() {
     game.load.image('sky', 'assets/sky.png');
     game.load.image('ground', 'assets/ground.png');
     game.load.image('thread', 'assets/string.png');
-    game.load.image('character', 'assets/descarga.png');
+    game.load.image('character', 'assets/spriteCharacter.png');
 }
 
 
@@ -75,8 +75,8 @@ function initialiseGame(){
 
     characterIndex = 0;
     
-    character = game.add.sprite(thread_pos_array[characterIndex],game.world.height - 32,'character');
-    character.scale.setTo(2,2);
+    character = game.add.sprite(thread_pos_array[characterIndex]-20,game.world.height - 93,'character');
+    character.scale.setTo(0.5,0.5);
     game.physics.arcade.enable(character);
 
     tiempoTexto = this.add.text(3,10, "00:00:00", {font: "20px Arial", fill: "white", stroke: "black", strokeThickness:4});
@@ -101,8 +101,8 @@ var crono = setInterval(actualizarCronometro, 1000);
 
 function updateHealthBar() {
     healthBar.querySelector('.bar').style.width = health + '%';
-
 }
+
 function decreaseHealthBar() {
     health-=20;
     var damageAudio = new Audio("assets/songs/damage.mp3");
@@ -156,7 +156,7 @@ function gameUpdate(){
     if (relativePos < 0){
         if(characterIndex > 0 ){      
             characterIndex--;
-            character.body.position.setTo(thread_pos_array[characterIndex],game.world.height - 32 );
+            character.body.position.setTo(thread_pos_array[characterIndex]-20,game.world.height - 93 );
 
             
         }
@@ -164,7 +164,7 @@ function gameUpdate(){
     else if( relativePos > (thread_pos_array[characterIndex + 1] - thread_pos_array[characterIndex])){
         if(characterIndex < n_webs -2) {
         characterIndex++;
-        character.body.position.setTo(thread_pos_array[characterIndex],game.world.height - 32 );
+        character.body.position.setTo(thread_pos_array[characterIndex]-20,game.world.height - 93 );
 
         }
     }
@@ -178,7 +178,6 @@ function inputChorno(){
 freeInput = true;
 }
 
-//Alberto
 function sumarPuntos(){
     puntuaje +=10;
     textoPuntuaje.setText("Points: "+puntuaje);
@@ -187,7 +186,22 @@ function sumarPuntos(){
 
 function subirLevel(){
     level+=1
-    //textoLevel.setText('Lvl '+ level);
+    textoLevel.setText('Lvl '+ level);
+}
+
+function cambiarParte(){
+    /*if(la parte en la que estemos == A){
+        textoParte.setText("Part A")
+    }
+    else{
+        if(la parte en la que estemos == B){
+            textoParte.setText("Part B")
+        }
+        else{
+            textoParte.setText("Part C")
+        }
+    }*/
+
 }
 
 function thread_creator(n_webs){
