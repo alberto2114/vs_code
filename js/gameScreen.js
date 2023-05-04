@@ -189,19 +189,17 @@ function subirLevel(){
 }
 
 function thread_creator(n_webs){
-    let thread_pos = game.world.width/n_webs - 16;
-    thread_pos_array = [thread_pos];
+    let thread_pos = game.world.width/n_webs;
+    let thread_pos_array = [thread_pos];
 
     for (let i = 1; i < n_webs; i++) {
-        const actual_thread = i;
-        
         let web_thread = threads.create(thread_pos, 0, 'thread');
         web_thread.body.immovable = true;
 
         thread_pos = thread_pos + (game.world.width/n_webs);
         thread_pos_array.push(thread_pos);
     }
-    console.log(thread_pos_array);
+    console.log(n_webs);
 }
 
 //Cuando vidas 0 colocaremos clearInterval(crono); y se pausara el crono
