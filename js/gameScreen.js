@@ -17,6 +17,7 @@ let characterIndex;
 let freeInput = true;
 let gameOver;
 let cursors;
+let mouseX;
 
 game.state.add('menu', startState);
 game.state.add('game', gameState);
@@ -36,6 +37,10 @@ function initialiseGame(){
     game.physics.startSystem(Phaser.Physics.ARCADE);
 
     game.add.sprite(0, 0, 'sky');
+    
+    //esconder raton
+    //this.input.mouse.disableContextMenu();
+    this.input.mouse = this.input.mousePointer = this.input.addPointer(1);
 
     platform = game.add.group();
     platform.enableBody = true;
@@ -55,11 +60,12 @@ function initialiseGame(){
     game.physics.arcade.enable(character);
 
     cursors = game.input.keyboard.createCursorKeys();
+    
 }
 
 function gameUpdate(){
-    
-
+    /*
+    //movimiento con flchas
     if(cursors.left.isDown && characterIndex > 0 && freeInput ==true){
         //left movement
         console.log('left');
@@ -75,8 +81,25 @@ function gameUpdate(){
         freeInput=false;
         game.time.events.add(400, inputChorno,this);
 
-    }
+    }*/
     
+
+    //movimiento con raton
+    mouseX = game.input.mousePointer.x;
+    let relativePos = mouseX - thread_pos_array[characterIndex];
+    if (mouseX < thread_pos_array[characterIndex]){
+        if(characterIndex > 0 ){
+            characterIndex--;
+            character.body.position.setTo(thread_pos_array[characterIndex],game.world.height - 32 );
+        }
+    }
+    else if( mouseX >  thread_pos_array[characterIndex]){
+        if(characterIndex < n_webs -2) {
+        characterIndex++;
+        character.body.position.setTo(thread_pos_array[characterIndex],game.world.height - 32 );
+
+        }
+    }
     
 }
 
