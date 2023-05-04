@@ -87,20 +87,25 @@ function gameUpdate(){
     //movimiento con raton
     mouseX = game.input.mousePointer.x;
     let relativePos = mouseX - thread_pos_array[characterIndex];
-    if (mouseX < thread_pos_array[characterIndex]){
-        if(characterIndex > 0 ){
+    if (relativePos < 0){
+        if(characterIndex > 0 ){      
             characterIndex--;
             character.body.position.setTo(thread_pos_array[characterIndex],game.world.height - 32 );
+
+            
         }
     }
-    else if( mouseX >  thread_pos_array[characterIndex]){
+    else if( relativePos > (thread_pos_array[characterIndex + 1] - thread_pos_array[characterIndex])){
         if(characterIndex < n_webs -2) {
         characterIndex++;
         character.body.position.setTo(thread_pos_array[characterIndex],game.world.height - 32 );
 
         }
     }
-    
+    else{
+
+    }
+   
 }
 
 function inputChorno(){
