@@ -54,10 +54,68 @@ function initializeGame() {
     game.input.enabled = true;
     game.stage.backgroundColor = "#fa0";
 
-    let button = game.add.button(130, 200, '', changePlay);
+    //gear button
+    options = game.add.sprite(game.world.width -42, 8, 'options'); //options icon
+    options.scale.setTo(0.5);
+    options.inputEnabled = true;
+    //options.events.onInputOver.loadTexture('menuBox'); trying some thing XD
+    options.events.onInputDown.add(showMenu, this);
+    //options panel
+    optionsMenu = game.add.sprite(game.world.width/2, game.world.height/2, 'optionsmenu');
+    optionsMenu.scale.setTo(3);
+    optionsMenu.anchor.set(0.5, 0.5);
+    //optionsMenu.visible = true;
+    //options extra box
+    menuBox = game.add.sprite(game.world.width/2 - 135, game.world.height/2 - 120, 'menuBox');
+    menuBox.scale.setTo(1.4, 1);
+    //menuBox.visible = false;
+    //options slider-bar
+    sliderBar = game.add.sprite(game.world.width/2 - 130, game.world.height/2 - 100, 'sliderBar');
+    sliderBar.scale.setTo(1.3, 1);
+    //sliderBar.visible = false;
+    //options slider
+    sliderCheck = game.add.sprite(game.world.width/2 - 130, game.world.height/2 - 110, 'sliderCheck');
+    sliderCheck.scale.setTo(0.7);
+    sliderCheck.inputEnabled = true;
+    sliderCheck.events.onInputUp.add(handleSliderCheck, this);;
+    //sliderCheck.visible = false;
+    //text corresponding to the number of webs showing
+    someText = game.add.text((game.world.width / 2) - 130, sliderCheck.y - 30, 'Number of webs',
+        {font: '16px Fantasy',
+        fill: '#FFFFFF',
+        align: 'center'});
+    //someText.visible = false;
+
+    
+    //some music
+    music = game.add.audio('music');
+    music.play();
+    //buttons corresponding to turning on/off music
+    musicButton = game.add.sprite(game.world.width/2 - 40, game.world.height/2 - 20, 'buttonCheck_YES');
+    musicButton.inputEnabled = true;
+    musicButton.events.onInputDown.add(turnMusic, this);
+    //musicButton.visible = false;
+    //some text corresponding to the music
+    someMusicText = game.add.text((game.world.width / 2) - 130, game.world.height/2 - 20, 'Music:',
+        {font: '32px Fantasy',
+        fill: '#FFFFFF',
+        align: 'center'});
+    //someMusicText.visible = false;
+
+    //selectable movement WASD
+    moveWASD = game.add.sprite(game.world.width/2 - 60, game.world.height/2 + 50, 'selectorON');
+    moveWASD.inputEnabled = true;
+    moveWASD.events.onInputDown.add(playWASD, this);
+    //moveWASD.visible = false;
+    //selectable movement MOUSE
+    moveMOUSE = game.add.sprite(game.world.width/2, game.world.height/2 + 50, 'selectorOFF');
+    moveMOUSE.inputEnabled = true;
+    moveMOUSE.events.onInputDown.add(playMOUSE, this);
+    //moveMOUSE.visible = false;
+
+    let button = game.add.button(130, 500, '', changePlay);
     button.addChild(game.add.text(0, 0, "START GAME", {fontSize: '32px', fill: '#FFFFFF', backgroundColor: '#ADD8E6', hoverColor: '#87CEFA', padding:{x: 16, y: 8}}));
-    
-    
+
     //game.add.sprite(0, 0, 'sky');
     //buttonPlay = new Button(0.5,0.45,'playButton', changePlay);
     //playButton = game.add.button(game.world.centerX, game.world.centerY, 'playButton', this.changePlay, this);
