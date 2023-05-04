@@ -30,6 +30,23 @@ let n_webs = 4;
 function preloadAssets() {
     //game.load.image('sky', 'assets/sky.png');
     //game.load.spritesheet(juego.world.centerX,juego.world.centerY ,'playButton', 'assets/playButton.png',336, 158, 2);
+
+    game.load.image('options', 'assets/ui/options.png');
+    game.load.image('optionsmenu', 'assets/ui/red_panel.png');
+    game.load.image('sliderBox', 'assets/ui/red_button10.png');
+    game.load.image('menuBox', 'assets/ui/red_button11.png');
+    game.load.image('sliderBar', 'assets/ui/grey_sliderHorizontal.png');
+    game.load.image('sliderCheck', 'assets/ui/grey_sliderDown.png');
+
+    game.load.image('buttonCheck_NO', 'assets/ui/grey_boxCheckmark.png');
+    game.load.image('buttonCheck_YES', 'assets/ui/red_boxCheckmark.png');
+
+    game.load.image('selectorOFF', 'assets/ui/grey_circle.png');
+    game.load.image('selectorON', 'assets/ui/red_boxTick.png');
+
+    //Music in the background thanks to https://www.FesliyanStudios.com
+    //Tittle: Retro Platforming - David Fesliyan
+    game.load.audio('music', ['assets/music/platformer.mp3']);
 }
 
 function initializeGame() {
