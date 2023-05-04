@@ -16,7 +16,7 @@ var someMusicText;
 var moveWASD;
 var moveMOUSE;
 
-let n_webs;
+let n_webs = 4;
 
 function preloadAssets() {
     game.load.image('options', 'assets/ui/options.png');
