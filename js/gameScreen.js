@@ -9,9 +9,18 @@ let gameState = {
 
 let platform;
 let threads;
-let n_webs = 10;
+let n_webs = 6;
 let x_thread = 800/n_webs;
-//Alberto
+
+let thread_pos_array;
+let character;
+let characterIndex;
+let freeInput = true;
+let gameOver;
+let cursors;
+let mouseX;
+=======
+
 var tiempoTexto;
 var tiempoTranscurrido = 0;
 var puntuaje = 0;
@@ -22,6 +31,7 @@ var textoLevel;
 let level = 1;
 document.getElementById("botonVida").addEventListener("click", decreaseHealthBar);
 document.getElementById("botonPuntos").addEventListener("click", sumarPuntos);
+
 
 game.state.add('menu', startState);
 game.state.add('game', gameState);
@@ -35,6 +45,7 @@ function loadAssets() {
     game.load.image('sky', 'assets/sky.png');
     game.load.image('ground', 'assets/ground.png');
     game.load.image('thread', 'assets/string.png');
+    game.load.image('character', 'assets/descarga.png');
 }
 
 
@@ -42,6 +53,10 @@ function initialiseGame(){
     game.physics.startSystem(Phaser.Physics.ARCADE);
 
     game.add.sprite(0, 0, 'sky');
+    
+    //esconder raton
+    //this.input.mouse.disableContextMenu();
+    this.input.mouse = this.input.mousePointer = this.input.addPointer(1);
 
     platform = game.add.group();
     platform.enableBody = true;
@@ -73,8 +88,19 @@ function actualizarCronometro(){
 
 var crono = setInterval(actualizarCronometro, 1000);
 
+
+    characterIndex = 0;
+    
+    character = game.add.sprite(thread_pos_array[characterIndex],game.world.height - 32,'character');
+    character.scale.setTo(2,2);
+    game.physics.arcade.enable(character);
+
+    cursors = game.input.keyboard.createCursorKeys();
+    
+
 function updateHealthBar() {
     healthBar.querySelector('.bar').style.width = health + '%';
+
 }
 function decreaseHealthBar() {
     health-=20;
@@ -95,7 +121,52 @@ function update(){
     
 }
 function gameUpdate(){
+    /*
+    //movimiento con flchas
+    if(cursors.left.isDown && characterIndex > 0 && freeInput ==true){
+        //left movement
+        console.log('left');
+        characterIndex--;
+        character.body.position.setTo(thread_pos_array[characterIndex],game.world.height - 32 );
+        freeInput=false;
+        game.time.events.add(200, inputChorno,this);
+    } else if(cursors.right.isDown && characterIndex < n_webs-2 && freeInput ==true){
+        //right movement
+        console.log('right');
+        characterIndex++;
+        character.body.position.setTo(thread_pos_array[characterIndex],game.world.height - 32 );
+        freeInput=false;
+        game.time.events.add(400, inputChorno,this);
+
+    }*/
     
+
+    //movimiento con raton
+    mouseX = game.input.mousePointer.x;
+    let relativePos = mouseX - thread_pos_array[characterIndex];
+    if (relativePos < 0){
+        if(characterIndex > 0 ){      
+            characterIndex--;
+            character.body.position.setTo(thread_pos_array[characterIndex],game.world.height - 32 );
+
+            
+        }
+    }
+    else if( relativePos > (thread_pos_array[characterIndex + 1] - thread_pos_array[characterIndex])){
+        if(characterIndex < n_webs -2) {
+        characterIndex++;
+        character.body.position.setTo(thread_pos_array[characterIndex],game.world.height - 32 );
+
+        }
+    }
+    else{
+
+    }
+   
+}
+
+function inputChorno(){
+freeInput = true;
 }
 
 //Alberto
@@ -111,8 +182,8 @@ function subirLevel(){
 }
 
 function thread_creator(n_webs){
-    let thread_pos = game.world.width/n_webs;
-    let thread_pos_array = [thread_pos];
+    let thread_pos = game.world.width/n_webs - 16;
+    thread_pos_array = [thread_pos];
 
     for (let i = 1; i < n_webs; i++) {
         const actual_thread = i;
