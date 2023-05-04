@@ -106,8 +106,10 @@ function updateHealthBar() {
 function decreaseHealthBar() {
     health-=20;
     var damageAudio = new Audio("assets/songs/damage.mp3");
+    var deadAudio = new Audio("assets/songs/dead.mp3");
     if (health<=0){
         health = 0;
+        deadAudio.play();
         clearInterval(crono);
         updateHealthBar();
         console.log("Has durado: " + tiempoTexto.text);
