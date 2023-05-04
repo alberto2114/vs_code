@@ -15,6 +15,11 @@ let x_thread = 800/n_webs;
 var tiempoTexto;
 var tiempoTranscurrido = 0;
 var puntuaje = 0;
+let healthBar = document.getElementById("healthBar");
+let health = 100;
+var textoParte;
+var textoLevel;
+let level = 1;
 
 game.state.add('menu', startState);
 game.state.add('game', gameState);
@@ -49,6 +54,9 @@ function initialiseGame(){
 //Alberto
     tiempoTexto = this.add.text(3,10, "00:00:00", {font: "20px Arial", fill: "white", stroke: "black", strokeThickness:4});
     textoPuntuaje = this.add.text(3,40, "Points: 0", {font: "20px Arial", fill: "white", stroke: "black", strokeThickness:4});
+    textoParte = this.add.text(739,10, "Part A", {font: "20px Arial", fill: "white", stroke: "black", strokeThickness:4});
+    textoLevel = this.add.text(746,40, "Lvl " + level, {font: "20px Arial", fill: "white", stroke: "black", strokeThickness:4});
+
 }
 
 //Alberto
@@ -63,6 +71,21 @@ function actualizarCronometro(){
 
 var crono = setInterval(actualizarCronometro, 1000);
 
+function updateHealthBar() {
+    healthBar.querySelector('.bar').style.width = health + '%';
+}
+function decreaseHealthBar() {
+    health-=20;
+    if (health<=0){
+        health = 0;
+        clearInterval(crono);
+        console.log("Has durado: " + tiempoTexto.text);
+        console.log("Has conseguido " + puntuaje + " puntos")
+    }
+    updateHealthBar();
+    console.log("la barra de vida tiene " + health);
+}
+
 function update(){
     
 }
@@ -75,8 +98,12 @@ function sumarPuntos(){
     puntuaje +=10;
     textoPuntuaje.setText("Points: "+puntuaje);
     clearInterval(crono);
-    console.log("Has durado: " + tiempoTexto.text);
-    console.log("Has conseguido " + puntuaje + " puntos")
+
+}
+
+function subirLevel(){
+    level+=1
+    //textoLevel.setText('Lvl '+ level);
 }
 
 function thread_creator(n_webs){
@@ -95,5 +122,5 @@ function thread_creator(n_webs){
     console.log(thread_pos_array);
 }
 
-//Cuando vidas 0 colocremos clearInterval(crono); y se pausara el crono
+//Cuando vidas 0 colocaremos clearInterval(crono); y se pausara el crono
 //Cuando destruyamos algo usamos la funcion sumarPuntos() y sumara 10 puntos el juego.
