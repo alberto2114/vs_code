@@ -45,16 +45,16 @@ function gameUpdate(){
     
 }
 
-function thread_creator(new_n_webs){
-    let thread_pos = game.world.width/new_n_webs;
+function thread_creator(n_webs){
+    let thread_pos = game.world.width/n_webs;
     let thread_pos_array = [thread_pos];
 
-    for (let i = 1; i < new_n_webs; i++) {
+    for (let i = 1; i < n_webs; i++) {
         let web_thread = threads.create(thread_pos, 0, 'thread');
         web_thread.body.immovable = true;
 
-        thread_pos = thread_pos + (game.world.width/new_n_webs);
+        thread_pos = thread_pos + (game.world.width/n_webs);
         thread_pos_array.push(thread_pos);
     }
-    console.log(new_n_webs);
+    console.log(n_webs);
 }
