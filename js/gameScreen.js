@@ -20,6 +20,8 @@ let health = 100;
 var textoParte;
 var textoLevel;
 let level = 1;
+document.getElementById("botonVida").addEventListener("click", decreaseHealthBar);
+document.getElementById("botonPuntos").addEventListener("click", sumarPuntos);
 
 game.state.add('menu', startState);
 game.state.add('game', gameState);
@@ -79,12 +81,15 @@ function decreaseHealthBar() {
     if (health<=0){
         health = 0;
         clearInterval(crono);
+        alert("Has durado: " + tiempoTexto.text + " y has conseguido " + puntuaje + " puntos");
         console.log("Has durado: " + tiempoTexto.text);
-        console.log("Has conseguido " + puntuaje + " puntos")
+        console.log("Has conseguido " + puntuaje + " puntos");
     }
     updateHealthBar();
     console.log("la barra de vida tiene " + health);
 }
+
+
 
 function update(){
     
@@ -97,7 +102,6 @@ function gameUpdate(){
 function sumarPuntos(){
     puntuaje +=10;
     textoPuntuaje.setText("Points: "+puntuaje);
-    clearInterval(crono);
 
 }
 
