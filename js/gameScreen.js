@@ -19,7 +19,7 @@ let freeInput = true;
 let gameOver;
 let cursors;
 let mouseX;
-=======
+
 
 var tiempoTexto;
 var tiempoTranscurrido = 0;
@@ -104,15 +104,21 @@ function updateHealthBar() {
 }
 function decreaseHealthBar() {
     health-=20;
+    var damageAudio = new Audio("assets/songs/damage.mp3");
     if (health<=0){
         health = 0;
         clearInterval(crono);
-        alert("Has durado: " + tiempoTexto.text + " y has conseguido " + puntuaje + " puntos");
+        updateHealthBar();
         console.log("Has durado: " + tiempoTexto.text);
         console.log("Has conseguido " + puntuaje + " puntos");
+        //alert("Has durado: " + tiempoTexto.text + " y has conseguido " + puntuaje + " puntos");
     }
-    updateHealthBar();
-    console.log("la barra de vida tiene " + health);
+    else{
+        damageAudio.play();
+        updateHealthBar();
+        console.log("la barra de vida tiene " + health);
+    }
+
 }
 
 
