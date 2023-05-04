@@ -78,7 +78,7 @@ function initializeGame() {
     
     //some music
     music = game.add.audio('music');
-    //music.play(); DECOMMENT BEFORE PUSH **************************
+    music.play();
     //buttons corresponding to turning on/off music
     musicButton = game.add.sprite(game.world.width/2 - 40, game.world.height/2 - 20, 'buttonCheck_YES');
     musicButton.inputEnabled = true;
