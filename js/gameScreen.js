@@ -8,7 +8,7 @@ let gameState = {
 
 let platform;
 let threads;
-let x_thread = 800/new_n_webs;
+let x_thread = 800/n_webs;
 
 var options;
 
@@ -60,7 +60,7 @@ function initialiseGame(){
 
     threads = game.add.group();
     threads.enableBody = true;
-    thread_creator(new_n_webs);
+    thread_creator(n_webs);
 
     platform = game.add.group();
     platform.enableBody = true;
@@ -187,15 +187,15 @@ function subirLevel(){
     //textoLevel.setText('Lvl '+ level);
 }
 
-function thread_creator(new_n_webs){
-    let thread_pos = game.world.width/new_n_webs;
+function thread_creator(n_webs){
+    let thread_pos = game.world.width/n_webs;
     let thread_pos_array = [thread_pos];
 
-    for (let i = 1; i < new_n_webs; i++) {
+    for (let i = 1; i < n_webs; i++) {
         let web_thread = threads.create(thread_pos, 0, 'thread');
         web_thread.body.immovable = true;
 
-        thread_pos = thread_pos + (game.world.width/new_n_webs);
+        thread_pos = thread_pos + (game.world.width/n_webs);
         thread_pos_array.push(thread_pos);
     }
     console.log(thread_pos_array);

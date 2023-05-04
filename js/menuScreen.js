@@ -16,7 +16,7 @@ var someMusicText;
 var moveWASD;
 var moveMOUSE;
 
-let new_n_webs;
+let n_webs;
 
 function preloadAssets() {
     game.load.image('options', 'assets/ui/options.png');
@@ -186,7 +186,7 @@ function handleSliderCheck() {
     var x = Phaser.Math.clamp(sliderCheck.x, x_limit - 130, x_limit + 100);
     var range = x_limit + 900;
     var n_webs_normalized = (x - (x_limit - 130)) / range;
-    new_n_webs = Phaser.Math.clamp(Phaser.Math.linearInterpolation(
+    var new_n_webs = Phaser.Math.clamp(Phaser.Math.linearInterpolation(
         [n_webs_min, n_webs_max],
         n_webs_normalized * (n_webs_max - n_webs_min)
         ),
@@ -194,9 +194,9 @@ function handleSliderCheck() {
         n_webs_max
     );
 
-    new_n_webs = Math.round(new_n_webs);
+    n_webs = Math.round(new_n_webs);
 
-    sliderValueText = game.add.text(x_limit - 10, sliderCheck.y + 40, new_n_webs - 1,
+    sliderValueText = game.add.text(x_limit - 10, sliderCheck.y + 40, n_webs - 1,
         {font: '32px Fantasy',
         fill: '#FFFFFF',
         backgroundColor: '#e86a17',
