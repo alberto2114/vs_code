@@ -9,7 +9,6 @@ let gameState = {
 
 let platform;
 let threads;
-let n_webs = 6;
 let x_thread = 800/n_webs;
 
 let thread_pos_array;
@@ -38,7 +37,7 @@ game.state.add('game', gameState);
 //game.state.add('final', finalState);
 //game.state.add('options', optionState);
 
-game.state.start('game');
+game.state.start('menu');
 
 function loadAssets() {
     console.log('arrancando');
@@ -60,7 +59,6 @@ function initialiseGame(){
 
     platform = game.add.group();
     platform.enableBody = true;
-
     
     cursors = game.input.keyboard.createCursorKeys();
     
@@ -69,8 +67,6 @@ function initialiseGame(){
 
     threads = game.add.group();
     threads.enableBody = true;
-    
-
     thread_creator(n_webs);
 
     characterIndex = 0;
@@ -190,7 +186,7 @@ function subirLevel(){
 
 function thread_creator(n_webs){
     let thread_pos = game.world.width/n_webs;
-    let thread_pos_array = [thread_pos];
+    thread_pos_array = [thread_pos];
 
     for (let i = 1; i < n_webs; i++) {
         let web_thread = threads.create(thread_pos, 0, 'thread');
