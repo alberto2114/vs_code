@@ -19,7 +19,7 @@ let freeInput = true;
 let gameOver;
 let cursors;
 let mouseX;
-=======
+
 
 var tiempoTexto;
 var tiempoTranscurrido = 0;
@@ -60,15 +60,25 @@ function initialiseGame(){
 
     platform = game.add.group();
     platform.enableBody = true;
+
+    
+    cursors = game.input.keyboard.createCursorKeys();
     
     let ground = platform.create(0, game.world.height - 32, 'ground');
     ground.body.immovable = true;
 
     threads = game.add.group();
     threads.enableBody = true;
+    
 
     thread_creator(n_webs);
-//Alberto
+
+    characterIndex = 0;
+    
+    character = game.add.sprite(thread_pos_array[characterIndex],game.world.height - 32,'character');
+    character.scale.setTo(2,2);
+    game.physics.arcade.enable(character);
+
     tiempoTexto = this.add.text(3,10, "00:00:00", {font: "20px Arial", fill: "white", stroke: "black", strokeThickness:4});
     textoPuntuaje = this.add.text(3,40, "Points: 0", {font: "20px Arial", fill: "white", stroke: "black", strokeThickness:4});
     textoParte = this.add.text(739,10, "Part A", {font: "20px Arial", fill: "white", stroke: "black", strokeThickness:4});
@@ -76,7 +86,6 @@ function initialiseGame(){
 
 }
 
-//Alberto
 function actualizarCronometro(){
     tiempoTranscurrido++;
     var horas = Math.floor(tiempoTranscurrido/3600);
@@ -88,14 +97,6 @@ function actualizarCronometro(){
 
 var crono = setInterval(actualizarCronometro, 1000);
 
-
-    characterIndex = 0;
-    
-    character = game.add.sprite(thread_pos_array[characterIndex],game.world.height - 32,'character');
-    character.scale.setTo(2,2);
-    game.physics.arcade.enable(character);
-
-    cursors = game.input.keyboard.createCursorKeys();
     
 
 function updateHealthBar() {
