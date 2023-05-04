@@ -124,47 +124,48 @@ function update(){
     
 }
 function gameUpdate(){
-    /*
-    //movimiento con flchas
-    if(cursors.left.isDown && characterIndex > 0 && freeInput ==true){
-        //left movement
-        console.log('left');
-        characterIndex--;
-        character.body.position.setTo(thread_pos_array[characterIndex],game.world.height - 32 );
-        freeInput=false;
-        game.time.events.add(200, inputChorno,this);
-    } else if(cursors.right.isDown && characterIndex < n_webs-2 && freeInput ==true){
-        //right movement
-        console.log('right');
-        characterIndex++;
-        character.body.position.setTo(thread_pos_array[characterIndex],game.world.height - 32 );
-        freeInput=false;
-        game.time.events.add(400, inputChorno,this);
-
-    }*/
     
+    //movimiento con flchas
+    if(boolmouse){
+        //movimiento con raton
+            mouseX = game.input.mousePointer.x;
+            let relativePos = mouseX - thread_pos_array[characterIndex];
+            if (relativePos < 0){
+                if(characterIndex > 0 ){      
+                    characterIndex--;
+                    character.body.position.setTo(thread_pos_array[characterIndex],game.world.height - 32 );
 
-    //movimiento con raton
-    mouseX = game.input.mousePointer.x;
-    let relativePos = mouseX - thread_pos_array[characterIndex];
-    if (relativePos < 0){
-        if(characterIndex > 0 ){      
-            characterIndex--;
-            character.body.position.setTo(thread_pos_array[characterIndex],game.world.height - 32 );
+                    
+                }
+            }
+            else if( relativePos > (thread_pos_array[characterIndex + 1] - thread_pos_array[characterIndex])){
+                if(characterIndex < n_webs -2) {
+                characterIndex++;
+                character.body.position.setTo(thread_pos_array[characterIndex],game.world.height - 32 );
 
-            
-        }
-    }
-    else if( relativePos > (thread_pos_array[characterIndex + 1] - thread_pos_array[characterIndex])){
-        if(characterIndex < n_webs -2) {
-        characterIndex++;
-        character.body.position.setTo(thread_pos_array[characterIndex],game.world.height - 32 );
-
-        }
+                }
+            }
     }
     else{
-
+        if(cursors.left.isDown && characterIndex > 0 && freeInput ==true){
+            //left movement
+            console.log('left');
+            characterIndex--;
+            character.body.position.setTo(thread_pos_array[characterIndex],game.world.height - 32 );
+            freeInput=false;
+            game.time.events.add(200, inputChorno,this);
+        } else if(cursors.right.isDown && characterIndex < n_webs-2 && freeInput ==true){
+            //right movement
+            console.log('right');
+            characterIndex++;
+            character.body.position.setTo(thread_pos_array[characterIndex],game.world.height - 32 );
+            freeInput=false;
+            game.time.events.add(400, inputChorno,this);
+    
+        }
     }
+
+
    
 }
 

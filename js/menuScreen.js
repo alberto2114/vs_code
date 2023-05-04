@@ -12,7 +12,7 @@ let startState = {
     create: initializeGame,
 };
 
-var optionsMenu;
+let optionsMenu;
 var sliderCheck;
 var sliderBar;
 var menuBox;
@@ -22,8 +22,9 @@ var music;
 var musicButton;
 var someMusicText;
 
-var moveWASD;
-var moveMOUSE;
+let moveWASD;
+let moveMOUSE;
+let boolmouse;
 
 let n_webs = 4;
 
@@ -139,6 +140,7 @@ function turnMusic(){
   function playWASD(){
     moveWASD.loadTexture('selectorON');
     moveMOUSE.loadTexture('selectorOFF');
+    boolmouse = false;
     //insert code WASD here
 
   }
@@ -146,6 +148,7 @@ function turnMusic(){
   function playMOUSE(){
     moveMOUSE.loadTexture('selectorON');
     moveWASD.loadTexture('selectorOFF');
+    boolmouse = true;
     //insert code MOUSE here
 
   }
