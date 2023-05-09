@@ -24,6 +24,9 @@ let disparos;
 const VELOCIDAD_DISPARO = 200;
 let fireButton;
 
+let enemies;
+const ASTEROID_VEL = 200;
+
 var tiempoTexto;
 var tiempoTranscurrido = 0;
 var puntuaje = 0;
@@ -50,6 +53,7 @@ function loadAssets() {
     game.load.image('thread', 'assets/string.png');
     game.load.image('character', 'assets/descarga.png');
     game.load.image('disparo', 'assets/disparo.png');
+    game.load.image('asteroid', 'assets/asteroid_test.png');
 }
 
 
@@ -89,6 +93,19 @@ function initialiseGame(){
     textoLevel = this.add.text(746,40, "Lvl " + level, {font: "20px Arial", fill: "white", stroke: "black", strokeThickness:4});
 
     crearDisparos(DISPAROS_GROUP_SIZE);
+
+    enemies = game.add.group();
+    enemies.enableBody = true;
+    game.time.events.loop(Phaser.Timer.SECOND * 2, spawnEnemies, this);
+}
+function spawnEnemies() {
+    let randomIndex = Math.floor(Math.random() * (n_webs-1));
+    let randomThread = thread_pos_array[randomIndex];
+
+    let enemy = enemies.create(randomThread, 0, 'asteroid');
+    enemy.scale.setTo(0.05, 0.05);
+    enemy.anchor.setTo(0.5, 0.5);
+    enemy.body.velocity.y = ASTEROID_VEL;
 }
 
 function crearDisparos(num){
@@ -141,10 +158,6 @@ function decreaseHealthBar() {
 }
 
 
-
-function update(){
-    
-}
 function gameUpdate(){
     
     if(boolmouse){
