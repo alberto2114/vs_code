@@ -60,7 +60,7 @@ function initialiseGame(){
     
     //esconder raton
     //this.input.mouse.disableContextMenu();
-    this.input.mouse = this.input.mousePointer = this.input.addPointer(1);
+   // this.input.mouse = this.input.mousePointer = this.input.addPointer(1);
 
     platform = game.add.group();
     platform.enableBody = true;
@@ -190,8 +190,13 @@ function gameUpdate(){
 }
 
 function manageShots(){
-    if(fireButton.justDown || game.input.mousePointer.leftButton.justPressed(30))
+    if(fireButton.justDown && !boolmouse){
         fireShot();
+    }
+        
+    else if(game.input.mousePointer.leftButton.justPressed(30) && boolmouse){
+        fireShot();
+    }
 }
 
 function fireShot(){
