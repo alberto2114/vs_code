@@ -19,6 +19,10 @@ let gameOver;
 let cursors;
 let mouseX;
 
+const DISPAROS_GROUP_SIZE = 10;
+let disparos;
+const VELOCIDAD_DISPARO = 200;
+let fireButton;
 
 var tiempoTexto;
 var tiempoTranscurrido = 0;
@@ -45,6 +49,7 @@ function loadAssets() {
     game.load.image('ground', 'assets/ground.png');
     game.load.image('thread', 'assets/string.png');
     game.load.image('character', 'assets/descarga.png');
+    game.load.image('disparo', 'assets/disparo.png');
 }
 
 
@@ -61,6 +66,7 @@ function initialiseGame(){
     platform.enableBody = true;
     
     cursors = game.input.keyboard.createCursorKeys();
+    fireButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
     
     let ground = platform.create(0, game.world.height - 32, 'ground');
     ground.body.immovable = true;
@@ -75,12 +81,28 @@ function initialiseGame(){
     character.scale.setTo(2,2);
     game.physics.arcade.enable(character);
 
+    
+
     tiempoTexto = this.add.text(3,10, "00:00:00", {font: "20px Arial", fill: "white", stroke: "black", strokeThickness:4});
     textoPuntuaje = this.add.text(3,40, "Points: 0", {font: "20px Arial", fill: "white", stroke: "black", strokeThickness:4});
     textoParte = this.add.text(739,10, "Part A", {font: "20px Arial", fill: "white", stroke: "black", strokeThickness:4});
     textoLevel = this.add.text(746,40, "Lvl " + level, {font: "20px Arial", fill: "white", stroke: "black", strokeThickness:4});
 
+    crearDisparos(DISPAROS_GROUP_SIZE);
 }
+
+function crearDisparos(num){
+    disparos = game.add.group();
+    disparos.enableBody = true;
+    disparos.createMultiple(num,'disparo');
+    //disparos.callAll('events.onOutofBounds.add','events.onOutOfBounds',resetMember);
+    disparos.setAll('outOfBoundsKill',true);
+    disparos.setAll('checkWorldBounds',true);
+}
+
+function resetMember(item) {
+    item.kill();
+    }
 
 function actualizarCronometro(){
     tiempoTranscurrido++;
@@ -125,7 +147,6 @@ function update(){
 }
 function gameUpdate(){
     
-    //movimiento con flchas
     if(boolmouse){
         //movimiento con raton
             mouseX = game.input.mousePointer.x;
@@ -146,6 +167,7 @@ function gameUpdate(){
                 }
             }
     }
+    //movimiento con flchas
     else{
         if(cursors.left.isDown && characterIndex > 0 && freeInput ==true){
             //left movement
@@ -163,10 +185,29 @@ function gameUpdate(){
             game.time.events.add(400, inputChorno,this);
     
         }
+    } 
+    manageShots();
+}
+
+function manageShots(){
+    if(fireButton.justDown || game.input.mousePointer.leftButton.justPressed(30))
+        fireShot();
+}
+
+function fireShot(){
+    let shotX = character.x + character.width/4;
+    let shotY = character.y;
+    let shotVel = -VELOCIDAD_DISPARO;
+    let shot = kaboom(shotX, shotY,shotVel);
+}
+
+function kaboom(x,y,vel){
+    let shot = disparos.getFirstExists(false);
+    if(shot){
+        shot.reset(x,y);
+        shot.body.velocity.y = vel;
     }
-
-
-   
+    return shot;
 }
 
 function inputChorno(){
