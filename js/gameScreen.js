@@ -160,7 +160,9 @@ function decreaseHealthBar() {
 
 
 function gameUpdate(){
-    
+    //collisions
+    game.physics.arcade.overlap(enemies,disparos,enemyHit,null,this);
+
     if(boolmouse){
         //movimiento con raton
             mouseX = game.input.mousePointer.x;
@@ -201,6 +203,11 @@ function gameUpdate(){
         }
     } 
     manageShots();
+}
+
+function enemyHit(enemy,disparo){
+    disparo.kill();
+    enemy.kill();
 }
 
 function manageShots(){
