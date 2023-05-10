@@ -104,7 +104,8 @@ function spawnEnemies() {
 
     let enemy = enemies.create(randomThread, 0, 'asteroid');
     enemy.scale.setTo(0.05, 0.05);
-    enemy.anchor.setTo(0.5, 0.5);
+    enemy.anchor.setTo(0.3, 0.5);
+    
     enemy.body.velocity.y = ASTEROID_VEL;
 }
 
