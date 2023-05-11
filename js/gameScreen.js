@@ -84,6 +84,8 @@ function initialiseGame(){
     textoParte = this.add.text(739,10, "Part A", {font: "20px Arial", fill: "white", stroke: "black", strokeThickness:4});
     textoLevel = this.add.text(746,40, "Lvl " + level, {font: "20px Arial", fill: "white", stroke: "black", strokeThickness:4});
 
+    //healthBar.disable = false;
+
 }
 
 function actualizarCronometro(){
