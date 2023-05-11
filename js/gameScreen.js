@@ -107,6 +107,8 @@ function initialiseGame(){
     health = 100;
     puntuaje = 0;
     updateHealthBar();
+
+    var crono = setInterval(actualizarCronometro, 1000);
 }
 function spawnEnemies() {
     let randomIndex = Math.floor(Math.random() * (n_webs-1));
@@ -146,7 +148,7 @@ function actualizarCronometro(){
     tiempoTexto.setText(tiempoTextoFormateado);
 }
 
-var crono = setInterval(actualizarCronometro, 1000);
+
 
     
 
@@ -225,6 +227,9 @@ function gameUpdate(){
         }
     } 
     manageShots();
+    if(puntuaje==150){
+        console.log('subir nivel primo');
+    }
 }
 
 function enemyHit(enemy,disparo){
