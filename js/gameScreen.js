@@ -101,7 +101,7 @@ function initialiseGame(){
 
     enemies = game.add.group();
     enemies.enableBody = true;
-    game.time.events.loop(Phaser.Timer.SECOND * 2, spawnEnemies, this);
+    game.time.events.loop(Phaser.Timer.SECOND * 1, spawnEnemies, this);
 
     healthBar.style.display = "block";
     health = 100;
@@ -160,13 +160,16 @@ function decreaseHealthBar(enemy) {
     enemy.kill();
     health-=20;
     var damageAudio = new Audio("assets/songs/damage.mp3");
+    var failAudio = new Audio("assets/songs/Fail.mp3");
     if (health<=0){
         damageAudio.play();
+        //failAudio.play();  
         health = 0;
         clearInterval(crono);
         updateHealthBar();
         console.log("Has durado: " + tiempoTexto.text);
         console.log("Has conseguido " + puntuaje + " puntos");
+         
         //alert("Has durado: " + tiempoTexto.text + " y has conseguido " + puntuaje + " puntos");
         music.stop();
         game.state.start('menu');
@@ -277,12 +280,14 @@ freeInput = true;
 function sumarPuntos(){
     puntuaje +=10;
     textoPuntuaje.setText("Points: "+puntuaje);
-
+    
 }
 
 function subirLevel(){
     level+=1
-    //textoLevel.setText('Lvl '+ level);
+    textoLevel.setText('Lvl '+ level);
+    var levelAudio = new Audio("assets/songs/levelUp.mp3");
+    levelAudio.play();
 }
 
 function thread_creator(n_webs){
