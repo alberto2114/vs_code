@@ -52,6 +52,9 @@ function preloadAssets() {
 
 function initializeGame() {
 
+    var healthBar = document.getElementById("healthBar");
+    healthBar.style.display = 'none';
+
     game.input.enabled = true;
     game.stage.backgroundColor = "#fa0";
 
@@ -120,6 +123,9 @@ function initializeGame() {
     //game.add.sprite(0, 0, 'sky');
     //buttonPlay = new Button(0.5,0.45,'playButton', changePlay);
     //playButton = game.add.button(game.world.centerX, game.world.centerY, 'playButton', this.changePlay, this);
+
+    //Alberto
+
 }
 
 function changePlay() {
