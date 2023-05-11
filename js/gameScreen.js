@@ -52,7 +52,9 @@ function loadAssets() {
     game.load.image('ground', 'assets/ground.png');
     game.load.image('thread', 'assets/string.png');
     game.load.image('character', 'assets/spriteCharacter.png');
-    game.load.image('disparo', 'assets/disparo.png');
+    //game.load.image('characterRight', 'assets/character_rigth.png');
+
+    game.load.image('disparo', 'assets/ammo.png');
     game.load.image('asteroid', 'assets/asteroid_test.png');
 }
 
@@ -85,7 +87,10 @@ function initialiseGame(){
     character.scale.setTo(0.5,0.5);
     game.physics.arcade.enable(character);
 
-    
+    //character.animations.add('idle', ['character', 'character1'], 2, true);
+    //character.animations.play('idle');
+
+    //character.animations.add('moveRight', ['characterRight'], 1, false);
 
     tiempoTexto = this.add.text(3,10, "00:00:00", {font: "20px Arial", fill: "white", stroke: "black", strokeThickness:4});
     textoPuntuaje = this.add.text(3,40, "Points: 0", {font: "20px Arial", fill: "white", stroke: "black", strokeThickness:4});
@@ -116,6 +121,11 @@ function crearDisparos(num){
     disparos.enableBody = true;
     disparos.createMultiple(num,'disparo');
     //disparos.callAll('events.onOutofBounds.add','events.onOutOfBounds',resetMember);
+    disparos.forEach(function(disparo){
+        disparo.scale.setTo(0.25,0.25);
+    });
+    
+    
     disparos.setAll('outOfBoundsKill',true);
     disparos.setAll('checkWorldBounds',true);
 }
@@ -193,6 +203,7 @@ function gameUpdate(){
             console.log('left');
             characterIndex--;
             character.body.position.setTo(thread_pos_array[characterIndex]-30,game.world.height - 93 );
+            
             freeInput=false;
             game.time.events.add(200, inputChorno,this);
         } else if(cursors.right.isDown && characterIndex < n_webs-2 && freeInput ==true){
@@ -200,8 +211,9 @@ function gameUpdate(){
             console.log('right');
             characterIndex++;
             character.body.position.setTo(thread_pos_array[characterIndex]-30,game.world.height - 93 );
+            //character.animations.play('moveRight');
             freeInput=false;
-            game.time.events.add(400, inputChorno,this);
+            game.time.events.add(200, inputChorno,this);
     
         }
     } 
@@ -212,6 +224,9 @@ function enemyHit(enemy,disparo){
     disparo.kill();
     enemy.kill();
     sumarPuntos();
+    var boomAudio = new Audio("assets/songs/boom.mp3");
+    boomAudio.play();
+
 }
 
 function manageShots(){
@@ -225,8 +240,8 @@ function manageShots(){
 }
 
 function fireShot(){
-    let shotX = character.x+18 + character.width/4;
-    let shotY = character.y;
+    let shotX = character.x+9 + character.width/4;
+    let shotY = character.y+-32;
     let shotVel = -VELOCIDAD_DISPARO;
     let shot = kaboom(shotX, shotY,shotVel);
     var shootAudio = new Audio("assets/songs/Shoot.mp3");
