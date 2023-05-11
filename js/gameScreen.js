@@ -15,7 +15,7 @@ let thread_pos_array;
 let character;
 let characterIndex;
 let freeInput = true;
-let gameOver;
+let gameEnd = false;
 let cursors;
 let mouseX;
 
@@ -25,7 +25,12 @@ const VELOCIDAD_DISPARO = 200;
 let fireButton;
 
 let enemies;
-const ASTEROID_VEL = 200;
+
+
+const NUM_LEVELS = 3;
+const LEVEL_ENEMY_SPAWN_PROB =[0.5, 0.75, 1];
+const LEVEL_ENEMY_VELOCITY =[200, 300, 350];
+const SCORE_TO_NEXT_LEVEL = 50;
 
 var tiempoTexto;
 var tiempoTranscurrido = 0;
@@ -35,6 +40,7 @@ let health = 100;
 var textoParte;
 var textoLevel;
 let level = 1;
+
 //document.getElementById("botonVida").addEventListener("click", decreaseHealthBar);
 //document.getElementById("botonPuntos").addEventListener("click", sumarPuntos);
 
@@ -102,7 +108,7 @@ function initialiseGame(){
 
     enemies = game.add.group();
     enemies.enableBody = true;
-    game.time.events.loop(Phaser.Timer.SECOND * 2, spawnEnemies, this);
+    game.time.events.loop(Phaser.Timer.SECOND * 1, spawnEnemies, this);
 
     healthBar.style.display = "block";
     health = 100;
@@ -112,14 +118,17 @@ function initialiseGame(){
     
 }
 function spawnEnemies() {
-    let randomIndex = Math.floor(Math.random() * (n_webs-1));
+    if(Math.random() < LEVEL_ENEMY_SPAWN_PROB[level-1]){
+        let randomIndex = Math.floor(Math.random() * (n_webs-1));
     let randomThread = thread_pos_array[randomIndex];
 
     let enemy = enemies.create(randomThread, 0, 'asteroid');
     enemy.scale.setTo(0.05, 0.05);
     enemy.anchor.setTo(0.3, 0.5);
     
-    enemy.body.velocity.y = ASTEROID_VEL;
+    enemy.body.velocity.y = LEVEL_ENEMY_VELOCITY[level-1];
+    }
+    
 }
 
 function crearDisparos(num){
@@ -163,14 +172,7 @@ function decreaseHealthBar(enemy) {
     var damageAudio = new Audio("assets/songs/damage.mp3");
     if (health<=0){
         damageAudio.play();
-        health = 0;
-        clearInterval(crono);
-        updateHealthBar();
-        console.log("Has durado: " + tiempoTexto.text);
-        console.log("Has conseguido " + puntuaje + " puntos");
-        //alert("Has durado: " + tiempoTexto.text + " y has conseguido " + puntuaje + " puntos");
-        music.stop();
-        game.state.start('menu');
+        gameEnd = true;
     }
     else{
         damageAudio.play();
@@ -189,7 +191,7 @@ function gameUpdate(){
     if(boolmouse){
         //movimiento con raton
             mouseX = game.input.mousePointer.x;
-            let relativePos = mouseX - thread_pos_array[characterIndex];
+            let relativePos = mouseX - thread_pos_array[characterIndex]+(x_thread/2);
             if (relativePos < 0){
                 if(characterIndex > 0 ){      
                     characterIndex--;
@@ -228,9 +230,23 @@ function gameUpdate(){
         }
     } 
     manageShots();
-    if(puntuaje==150){
-        console.log('subir nivel primo');
+    if(gameEnd){
+        gameOver();
     }
+}
+
+function gameOver(){
+
+    health = 0;
+    clearInterval(crono);
+    updateHealthBar();
+    console.log("Has durado: " + tiempoTexto.text);
+    console.log("Has conseguido " + puntuaje + " puntos");
+    //alert("Has durado: " + tiempoTexto.text + " y has conseguido " + puntuaje + " puntos");
+    music.stop();
+    level = 1;
+    gameEnd = false;
+    game.state.start('menu');
 }
 
 function enemyHit(enemy,disparo){
@@ -239,6 +255,10 @@ function enemyHit(enemy,disparo){
     sumarPuntos();
     var boomAudio = new Audio("assets/songs/boom.mp3");
     boomAudio.play();
+
+    if(level < NUM_LEVELS && puntuaje== level*SCORE_TO_NEXT_LEVEL){
+        subirLevel();
+    }
 
 }
 
@@ -283,7 +303,7 @@ function sumarPuntos(){
 
 function subirLevel(){
     level+=1
-    //textoLevel.setText('Lvl '+ level);
+    textoLevel.setText('Lvl '+ level);
 }
 
 function thread_creator(n_webs){
