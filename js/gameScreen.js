@@ -145,6 +145,7 @@ function decreaseHealthBar() {
     health-=20;
     var damageAudio = new Audio("assets/songs/damage.mp3");
     if (health<=0){
+        damageAudio.play();
         health = 0;
         clearInterval(crono);
         updateHealthBar();
