@@ -35,7 +35,7 @@ let health = 100;
 var textoParte;
 var textoLevel;
 let level = 1;
-document.getElementById("botonVida").addEventListener("click", decreaseHealthBar);
+//document.getElementById("botonVida").addEventListener("click", decreaseHealthBar);
 //document.getElementById("botonPuntos").addEventListener("click", sumarPuntos);
 
 
@@ -104,6 +104,9 @@ function initialiseGame(){
     game.time.events.loop(Phaser.Timer.SECOND * 2, spawnEnemies, this);
 
     healthBar.style.display = "block";
+    health = 100;
+    puntuaje = 0;
+    updateHealthBar();
 }
 function spawnEnemies() {
     let randomIndex = Math.floor(Math.random() * (n_webs-1));
@@ -151,7 +154,8 @@ function updateHealthBar() {
     healthBar.querySelector('.bar').style.width = health + '%';
 
 }
-function decreaseHealthBar() {
+function decreaseHealthBar(enemy) {
+    enemy.kill();
     health-=20;
     var damageAudio = new Audio("assets/songs/damage.mp3");
     if (health<=0){
@@ -162,6 +166,8 @@ function decreaseHealthBar() {
         console.log("Has durado: " + tiempoTexto.text);
         console.log("Has conseguido " + puntuaje + " puntos");
         //alert("Has durado: " + tiempoTexto.text + " y has conseguido " + puntuaje + " puntos");
+        music.stop();
+        game.state.start('menu');
     }
     else{
         damageAudio.play();
@@ -175,6 +181,7 @@ function decreaseHealthBar() {
 function gameUpdate(){
     //collisions
     game.physics.arcade.overlap(enemies,disparos,enemyHit,null,this);
+    game.physics.arcade.overlap(enemies,platform,decreaseHealthBar,null,this);
 
     if(boolmouse){
         //movimiento con raton

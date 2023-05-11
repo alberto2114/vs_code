@@ -18,7 +18,7 @@ var sliderBar;
 var menuBox;
 var someText;
 
-var music;
+let music;
 var musicButton;
 var someMusicText;
 
