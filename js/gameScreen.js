@@ -38,6 +38,7 @@ let level = 1;
 //document.getElementById("botonVida").addEventListener("click", decreaseHealthBar);
 //document.getElementById("botonPuntos").addEventListener("click", sumarPuntos);
 
+var crono = setInterval(actualizarCronometro, 1000);
 
 game.state.add('menu', startState);
 game.state.add('game', gameState);
@@ -108,7 +109,7 @@ function initialiseGame(){
     puntuaje = 0;
     updateHealthBar();
 
-    var crono = setInterval(actualizarCronometro, 1000);
+    
 }
 function spawnEnemies() {
     let randomIndex = Math.floor(Math.random() * (n_webs-1));
