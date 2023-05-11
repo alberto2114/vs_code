@@ -19,6 +19,13 @@ let gameOver;
 let cursors;
 let mouseX;
 
+const DISPAROS_GROUP_SIZE = 10;
+let disparos;
+const VELOCIDAD_DISPARO = 200;
+let fireButton;
+
+let enemies;
+const ASTEROID_VEL = 200;
 
 var tiempoTexto;
 var tiempoTranscurrido = 0;
@@ -45,6 +52,8 @@ function loadAssets() {
     game.load.image('ground', 'assets/ground.png');
     game.load.image('thread', 'assets/string.png');
     game.load.image('character', 'assets/descarga.png');
+    game.load.image('disparo', 'assets/disparo.png');
+    game.load.image('asteroid', 'assets/asteroid_test.png');
 }
 
 
@@ -55,12 +64,13 @@ function initialiseGame(){
     
     //esconder raton
     //this.input.mouse.disableContextMenu();
-    this.input.mouse = this.input.mousePointer = this.input.addPointer(1);
+   // this.input.mouse = this.input.mousePointer = this.input.addPointer(1);
 
     platform = game.add.group();
     platform.enableBody = true;
     
     cursors = game.input.keyboard.createCursorKeys();
+    fireButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
     
     let ground = platform.create(0, game.world.height - 32, 'ground');
     ground.body.immovable = true;
@@ -75,12 +85,42 @@ function initialiseGame(){
     character.scale.setTo(2,2);
     game.physics.arcade.enable(character);
 
+    
+
     tiempoTexto = this.add.text(3,10, "00:00:00", {font: "20px Arial", fill: "white", stroke: "black", strokeThickness:4});
     textoPuntuaje = this.add.text(3,40, "Points: 0", {font: "20px Arial", fill: "white", stroke: "black", strokeThickness:4});
     textoParte = this.add.text(739,10, "Part A", {font: "20px Arial", fill: "white", stroke: "black", strokeThickness:4});
     textoLevel = this.add.text(746,40, "Lvl " + level, {font: "20px Arial", fill: "white", stroke: "black", strokeThickness:4});
 
+    crearDisparos(DISPAROS_GROUP_SIZE);
+
+    enemies = game.add.group();
+    enemies.enableBody = true;
+    game.time.events.loop(Phaser.Timer.SECOND * 2, spawnEnemies, this);
 }
+function spawnEnemies() {
+    let randomIndex = Math.floor(Math.random() * (n_webs-1));
+    let randomThread = thread_pos_array[randomIndex];
+
+    let enemy = enemies.create(randomThread, 0, 'asteroid');
+    enemy.scale.setTo(0.05, 0.05);
+    enemy.anchor.setTo(0.3, 0.5);
+    
+    enemy.body.velocity.y = ASTEROID_VEL;
+}
+
+function crearDisparos(num){
+    disparos = game.add.group();
+    disparos.enableBody = true;
+    disparos.createMultiple(num,'disparo');
+    //disparos.callAll('events.onOutofBounds.add','events.onOutOfBounds',resetMember);
+    disparos.setAll('outOfBoundsKill',true);
+    disparos.setAll('checkWorldBounds',true);
+}
+
+function resetMember(item) {
+    item.kill();
+    }
 
 function actualizarCronometro(){
     tiempoTranscurrido++;
@@ -119,13 +159,10 @@ function decreaseHealthBar() {
 }
 
 
-
-function update(){
-    
-}
 function gameUpdate(){
-    
-    //movimiento con flchas
+    //collisions
+    game.physics.arcade.overlap(enemies,disparos,enemyHit,null,this);
+
     if(boolmouse){
         //movimiento con raton
             mouseX = game.input.mousePointer.x;
@@ -146,6 +183,7 @@ function gameUpdate(){
                 }
             }
     }
+    //movimiento con flchas
     else{
         if(cursors.left.isDown && characterIndex > 0 && freeInput ==true){
             //left movement
@@ -163,10 +201,39 @@ function gameUpdate(){
             game.time.events.add(400, inputChorno,this);
     
         }
+    } 
+    manageShots();
+}
+
+function enemyHit(enemy,disparo){
+    disparo.kill();
+    enemy.kill();
+}
+
+function manageShots(){
+    if(fireButton.justDown && !boolmouse){
+        fireShot();
     }
+        
+    else if(game.input.mousePointer.leftButton.justPressed(30) && boolmouse){
+        fireShot();
+    }
+}
 
+function fireShot(){
+    let shotX = character.x + character.width/4;
+    let shotY = character.y;
+    let shotVel = -VELOCIDAD_DISPARO;
+    let shot = kaboom(shotX, shotY,shotVel);
+}
 
-   
+function kaboom(x,y,vel){
+    let shot = disparos.getFirstExists(false);
+    if(shot){
+        shot.reset(x,y);
+        shot.body.velocity.y = vel;
+    }
+    return shot;
 }
 
 function inputChorno(){
