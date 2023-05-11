@@ -124,8 +124,6 @@ function initializeGame() {
     //buttonPlay = new Button(0.5,0.45,'playButton', changePlay);
     //playButton = game.add.button(game.world.centerX, game.world.centerY, 'playButton', this.changePlay, this);
 
-    //Alberto
-
 }
 
 function changePlay() {
