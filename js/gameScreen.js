@@ -9,6 +9,7 @@ let gameState = {
 
 let platform;
 let threads;
+let threads_inclined;
 let x_thread = 800/n_webs;
 
 let thread_pos_array;
@@ -44,7 +45,7 @@ game.state.add('game', gameState);
 //game.state.add('final', finalState);
 //game.state.add('options', optionState);
 
-game.state.start('menu');
+game.state.start('game');
 
 function loadAssets() {
     console.log('arrancando');
@@ -80,6 +81,10 @@ function initialiseGame(){
     threads = game.add.group();
     threads.enableBody = true;
     thread_creator(n_webs);
+
+    threads_inclined = game.add.group();
+    threads_inclined.enableBody = true;
+    thread_creator_V2();
 
     characterIndex = 0;
     
@@ -292,6 +297,22 @@ function thread_creator(n_webs){
         thread_pos_array.push(thread_pos);
     }
     console.log(n_webs);
+}
+
+/*guardas por inicial y final de los hilos inclinados
+    array de objetos hilo, */
+
+function thread_creator_V2(){
+    let thread_height = game.cache.getImage('thread').height;
+    let randomY = Math.floor(Math.random() * (400 - 40 + 1));
+
+    threads_inclined.angle = -45;
+
+    for (let i = 0; i < n_webs; i++) {
+        //let thread_tamano_inclinado = Math.sqrt(Math.pow(randomY, 2) + Math.pow(x_thread, 2));
+        let web_inclined_thread = threads_inclined.create(thread_pos_array[i], -randomY+thread_height, 'thread');
+        web_inclined_thread.body.immovable = true;
+    }
 }
 
 //Cuando vidas 0 colocaremos clearInterval(crono); y se pausara el crono
