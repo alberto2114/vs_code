@@ -15,7 +15,7 @@ let thread_pos_array;
 let character;
 let characterIndex;
 let freeInput = true;
-let gameOver;
+let gameEnd = false;
 let cursors;
 let mouseX;
 
@@ -169,14 +169,7 @@ function decreaseHealthBar(enemy) {
     var damageAudio = new Audio("assets/songs/damage.mp3");
     if (health<=0){
         damageAudio.play();
-        health = 0;
-        clearInterval(crono);
-        updateHealthBar();
-        console.log("Has durado: " + tiempoTexto.text);
-        console.log("Has conseguido " + puntuaje + " puntos");
-        //alert("Has durado: " + tiempoTexto.text + " y has conseguido " + puntuaje + " puntos");
-        music.stop();
-        game.state.start('menu');
+        gameEnd = true;
     }
     else{
         damageAudio.play();
@@ -234,6 +227,23 @@ function gameUpdate(){
         }
     } 
     manageShots();
+    if(gameEnd){
+        gameOver();
+    }
+}
+
+function gameOver(){
+
+    health = 0;
+    clearInterval(crono);
+    updateHealthBar();
+    console.log("Has durado: " + tiempoTexto.text);
+    console.log("Has conseguido " + puntuaje + " puntos");
+    //alert("Has durado: " + tiempoTexto.text + " y has conseguido " + puntuaje + " puntos");
+    music.stop();
+    level = 1;
+    gameEnd = false;
+    game.state.start('menu');
 }
 
 function enemyHit(enemy,disparo){
