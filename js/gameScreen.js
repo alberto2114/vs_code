@@ -35,6 +35,8 @@ let health = 100;
 var textoParte;
 var textoLevel;
 let level = 1;
+
+let crono;
 //document.getElementById("botonVida").addEventListener("click", decreaseHealthBar);
 //document.getElementById("botonPuntos").addEventListener("click", sumarPuntos);
 
@@ -57,6 +59,7 @@ function loadAssets() {
     game.load.image('disparo', 'assets/ammo.png');
     game.load.image('asteroid', 'assets/asteroid_test.png');
 }
+
 
 
 function initialiseGame(){
@@ -107,8 +110,8 @@ function initialiseGame(){
     health = 100;
     puntuaje = 0;
     updateHealthBar();
-
-    var crono = setInterval(actualizarCronometro, 1000);
+    tiempoTranscurrido = 0;
+    crono = setInterval(actualizarCronometro, 1000);
 }
 function spawnEnemies() {
     let randomIndex = Math.floor(Math.random() * (n_webs-1));
