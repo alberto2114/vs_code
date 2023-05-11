@@ -27,3 +27,7 @@ canvas {
     height: 100%;
     background-color: green;
 }
+
+.disabled {
+    display: none;
+}

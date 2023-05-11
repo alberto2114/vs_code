@@ -36,7 +36,7 @@ var textoParte;
 var textoLevel;
 let level = 1;
 document.getElementById("botonVida").addEventListener("click", decreaseHealthBar);
-document.getElementById("botonPuntos").addEventListener("click", sumarPuntos);
+//document.getElementById("botonPuntos").addEventListener("click", sumarPuntos);
 
 
 game.state.add('menu', startState);
@@ -97,6 +97,8 @@ function initialiseGame(){
     enemies = game.add.group();
     enemies.enableBody = true;
     game.time.events.loop(Phaser.Timer.SECOND * 2, spawnEnemies, this);
+
+    healthBar.style.display = "block";
 }
 function spawnEnemies() {
     let randomIndex = Math.floor(Math.random() * (n_webs-1));
@@ -208,6 +210,7 @@ function gameUpdate(){
 function enemyHit(enemy,disparo){
     disparo.kill();
     enemy.kill();
+    sumarPuntos();
 }
 
 function manageShots(){
@@ -225,6 +228,8 @@ function fireShot(){
     let shotY = character.y;
     let shotVel = -VELOCIDAD_DISPARO;
     let shot = kaboom(shotX, shotY,shotVel);
+    var shootAudio = new Audio("assets/songs/Shoot.mp3");
+    shootAudio.play();
 }
 
 function kaboom(x,y,vel){
