@@ -52,6 +52,7 @@ function loadAssets() {
     game.load.image('sky', 'assets/sky.png');
     game.load.image('ground', 'assets/ground.png');
     game.load.image('thread', 'assets/string.png');
+    game.load.image('thread2', 'assets/string-export.png');
     game.load.image('character', 'assets/spriteCharacter.png');
     //game.load.image('characterRight', 'assets/character_rigth.png');
 
@@ -83,7 +84,7 @@ function initialiseGame(){
     thread_creator(n_webs);
 
     threads_inclined = game.add.group();
-    threads_inclined.enableBody = true;
+    //threads_inclined.enableBody = true;
     thread_creator_V2();
 
     characterIndex = 0;
@@ -291,6 +292,7 @@ function thread_creator(n_webs){
 
     for (let i = 1; i < n_webs; i++) {
         let web_thread = threads.create(thread_pos, 0, 'thread');
+        web_thread.anchor.setTo(0.5, 0);
         web_thread.body.immovable = true;
 
         thread_pos = thread_pos + (game.world.width/n_webs);
@@ -303,15 +305,17 @@ function thread_creator(n_webs){
     array de objetos hilo, */
 
 function thread_creator_V2(){
-    let thread_height = game.cache.getImage('thread').height;
-    let randomY = Math.floor(Math.random() * (400 - 40 + 1));
+    let catetoX = x_thread;
+    let catetoY;
+    for (let i = 0; i < n_webs-2; i++) {
+        let randomY = Math.floor(Math.random() * (400 - 40 + 1)); //puntoY del hilo1
+        let randomY2 = Math.floor(Math.random() * (400 - 40 + 1)) + randomY; //puntoY del hilo2
+        catetoY = randomY2 - randomY;
 
-    threads_inclined.angle = -45;
-
-    for (let i = 0; i < n_webs; i++) {
-        //let thread_tamano_inclinado = Math.sqrt(Math.pow(randomY, 2) + Math.pow(x_thread, 2));
-        let web_inclined_thread = threads_inclined.create(thread_pos_array[i], -randomY+thread_height, 'thread');
-        web_inclined_thread.body.immovable = true;
+        let web_inclined_thread = game.add.graphics(0, 0);
+        web_inclined_thread.lineStyle(3, 0xff0000);
+        web_inclined_thread.moveTo(thread_pos_array[i], randomY); //punto primero del hilo 1
+        web_inclined_thread.lineTo(thread_pos_array[i] + catetoX, randomY2); //punto segundo del hilo 2
     }
 }
 
