@@ -55,7 +55,7 @@ game.state.add('game', gameState);
 //game.state.add('final', finalState);
 //game.state.add('options', optionState);
 
-game.state.start('game');
+game.state.start('menu');
 
 function loadAssets() {
     console.log('arrancando');
