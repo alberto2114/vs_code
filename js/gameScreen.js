@@ -10,9 +10,12 @@ let gameState = {
 let platform;
 let threads;
 let threads_inclined;
+let thread_changer;
 let x_thread = 800/n_webs;
 
 let thread_pos_array;
+let thread_inclined_array_ini;
+let thread_inclined_array_fin;
 let character;
 let characterIndex;
 let freeInput = true;
@@ -52,7 +55,7 @@ function loadAssets() {
     game.load.image('sky', 'assets/sky.png');
     game.load.image('ground', 'assets/ground.png');
     game.load.image('thread', 'assets/string.png');
-    game.load.image('thread2', 'assets/string-export.png');
+    game.load.image('purple', 'assets/trajectory_changer.png');
     game.load.image('character', 'assets/spriteCharacter.png');
     //game.load.image('characterRight', 'assets/character_rigth.png');
 
@@ -85,6 +88,10 @@ function initialiseGame(){
 
     threads_inclined = game.add.group();
     //threads_inclined.enableBody = true;
+
+    thread_changer = game.add.group();
+    thread_changer.enableBody = true;
+
     thread_creator_V2();
 
     characterIndex = 0;
@@ -301,21 +308,31 @@ function thread_creator(n_webs){
     console.log(n_webs);
 }
 
-/*guardas por inicial y final de los hilos inclinados
-    array de objetos hilo, */
-
 function thread_creator_V2(){
     let catetoX = x_thread;
     let catetoY;
+    thread_inclined_array_ini = [];
+    thread_inclined_array_fin = [];
+
     for (let i = 0; i < n_webs-2; i++) {
         let randomY = Math.floor(Math.random() * (400 - 40 + 1)); //puntoY del hilo1
-        let randomY2 = Math.floor(Math.random() * (400 - 40 + 1)) + randomY; //puntoY del hilo2
+        let randomY2 = Math.floor(Math.random() * (200 - 40 + 1)) + randomY/2; //puntoY del hilo2
         catetoY = randomY2 - randomY;
 
         let web_inclined_thread = game.add.graphics(0, 0);
-        web_inclined_thread.lineStyle(3, 0xff0000);
-        web_inclined_thread.moveTo(thread_pos_array[i], randomY); //punto primero del hilo 1
-        web_inclined_thread.lineTo(thread_pos_array[i] + catetoX, randomY2); //punto segundo del hilo 2
+        web_inclined_thread.lineStyle(3, 0x800080);
+        web_inclined_thread.moveTo(thread_pos_array[i], randomY); //thread_pos_array[i] es el puntoX del hilo1
+        web_inclined_thread.lineTo(thread_pos_array[i] + catetoX, randomY2); //thread_pos_array[i] + catetoX es el puntoX del hilo2
+
+        let point_ini = thread_changer.create(thread_pos_array[i], randomY, 'purple'); //generar los puntos de inicio y final de hilos (sprites)
+        point_ini.anchor.setTo(0.5);
+        point_ini.scale.setTo(0.5);
+        let point_fin = thread_changer.create(thread_pos_array[i] + catetoX, randomY2,'purple');
+        point_fin.anchor.setTo(0.5);
+        point_fin.scale.setTo(0.5);
+
+        thread_inclined_array_ini.push([thread_pos_array[i], randomY]); //guardamos el PUNTO donde EMPIEZAN los hilos
+        thread_inclined_array_fin.push([thread_pos_array[i] + catetoX, randomY2]); //guardamos el PUNTO donde TERMINAN los hilos
     }
 }
 
