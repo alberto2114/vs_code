@@ -335,7 +335,7 @@ function thread_creator(n_webs){
 }
 
 function thread_creator_V2(){
-    let catetoX = x_thread;
+    let catetoX = 800/n_webs;
     let catetoY;
     thread_inclined_array_ini = [];
     thread_inclined_array_fin = [];
