@@ -29,7 +29,7 @@ let boolmouse;
 let n_webs = 4;
 
 function preloadAssets() {
-    //game.load.image('sky', 'assets/sky.png');
+    game.load.image('sky', 'assets/sky1.png');
     //game.load.spritesheet(juego.world.centerX,juego.world.centerY ,'playButton', 'assets/playButton.png',336, 158, 2);
 
     game.load.image('options', 'assets/ui/options.png');
@@ -51,6 +51,9 @@ function preloadAssets() {
 }
 
 function initializeGame() {
+
+    var fondo = game.add.sprite(0, 0, 'sky');
+    fondo.z = -1;
 
     var healthBar = document.getElementById("healthBar");
     healthBar.style.display = 'none';
@@ -120,7 +123,7 @@ function initializeGame() {
     let button = game.add.button(130, 500, '', changePlay);
     button.addChild(game.add.text(0, 0, "START GAME", {fontSize: '32px', fill: '#FFFFFF', backgroundColor: '#ADD8E6', hoverColor: '#87CEFA', padding:{x: 16, y: 8}}));
 
-    //game.add.sprite(0, 0, 'sky');
+    
     //buttonPlay = new Button(0.5,0.45,'playButton', changePlay);
     //playButton = game.add.button(game.world.centerX, game.world.centerY, 'playButton', this.changePlay, this);
 
