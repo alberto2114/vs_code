@@ -47,8 +47,6 @@ var textoParte;
 var textoLevel;
 let level = 1;
 
-//document.getElementById("botonVida").addEventListener("click", decreaseHealthBar);
-//document.getElementById("botonPuntos").addEventListener("click", sumarPuntos);
 
 var crono = setInterval(actualizarCronometro, 1000);
 
@@ -66,9 +64,6 @@ function loadAssets() {
     game.load.image('thread', 'assets/string.png');
     game.load.image('purple', 'assets/trajectory_changer.png');
     //game.load.image('character', 'assets/spriteCharacter.png');
-    //game.load.image('characterRight', 'assets/character_rigth.png');
-    //game.load.image('character', 'assets/spriteCharacter.png');
-    //game.load.image('character2', 'assets/character_right.png');
     game.load.spritesheet('character', 'assets/spriteSheet.png', 198.5, 211 );
 
 
@@ -118,11 +113,6 @@ function initialiseGame(){
     game.physics.arcade.enable(character);
     
     character.animations.add('idle', [0, 1], 2.5, true);
-
-    //character.animations.add('idle', ['character', 'character2'], 1, true);
-    //character.animations.play('idle');
-
-    //character.animations.add('moveRight', ['characterRight'], 1, false);
 
     tiempoTexto = this.add.text(3,10, "00:00:00", {font: "20px Arial", fill: "white", stroke: "black", strokeThickness:4});
     textoPuntuaje = this.add.text(3,40, "Points: 0", {font: "20px Arial", fill: "white", stroke: "black", strokeThickness:4});
@@ -404,6 +394,3 @@ function thread_creator_V2(){
         thread_inclined_array_fin.push([thread_pos_array[i] + catetoX, randomY2]); //guardamos el PUNTO donde TERMINAN los hilos
     }
 }
-
-//Cuando vidas 0 colocaremos clearInterval(crono); y se pausara el crono
-//Cuando destruyamos algo usamos la funcion sumarPuntos() y sumara 10 puntos el juego.
