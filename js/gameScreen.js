@@ -158,7 +158,7 @@ function spawnEnemies() {
     enemy.body.velocity.y = LEVEL_ENEMY_VELOCITY[level-1];
     }
     
-    enemy.body.angularVelocity = 150;
+    //enemy.body.angularVelocity = 150;
 }
 
 function spawnLives() {
