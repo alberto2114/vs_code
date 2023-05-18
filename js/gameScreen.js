@@ -54,8 +54,10 @@ function loadAssets() {
     game.load.image('sky', 'assets/sky.png');
     game.load.image('ground', 'assets/ground.png');
     game.load.image('thread', 'assets/string.png');
-    game.load.image('character', 'assets/spriteCharacter.png');
-    //game.load.image('characterRight', 'assets/character_rigth.png');
+    //game.load.image('character', 'assets/spriteCharacter.png');
+    game.load.image('character2', 'assets/character_right.png');
+    game.load.spritesheet('character', 'assets/spriteSheet.png', 198.5, 211 );
+
 
     game.load.image('disparo', 'assets/ammo.png');
     game.load.image('asteroid', 'assets/asteroid_test.png');
@@ -87,13 +89,16 @@ function initialiseGame(){
     thread_creator(n_webs);
 
     characterIndex = 0;
+
     
-    character = game.add.sprite(thread_pos_array[characterIndex]-30,game.world.height - 93,'character');
+    
+    character = game.add.sprite(thread_pos_array[characterIndex]-37,game.world.height - 101,'character');
     character.scale.setTo(0.5,0.5);
     game.physics.arcade.enable(character);
     
+    character.animations.add('idle', [0, 1], 2.5, true);
 
-    //character.animations.add('idle', ['character', 'character1'], 2, true);
+    //character.animations.add('idle', ['character', 'character2'], 1, true);
     //character.animations.play('idle');
 
     //character.animations.add('moveRight', ['characterRight'], 1, false);
@@ -111,7 +116,7 @@ function initialiseGame(){
 
     heartLives = game.add.group();
     heartLives.enableBody = true;
-    game.time.events.loop(Phaser.Timer.SECOND * 5, spawnLives, this);
+    game.time.events.loop(Phaser.Timer.SECOND * 21, spawnLives, this);
 
     healthBar.style.display = "block";
     health = 100;
@@ -129,6 +134,7 @@ function spawnEnemies() {
     enemy.anchor.setTo(0.3, 0.5);
     
     enemy.body.velocity.y = ASTEROID_VEL;
+    enemy.body.angularVelocity = 100;
 }
 
 function spawnLives() {
@@ -137,7 +143,7 @@ function spawnLives() {
 
     let lives = heartLives.create(randomThread, 0, 'heart');
     lives.scale.setTo(0.02, 0.02);
-    lives.anchor.setTo(0.3, 0.5);
+    lives.anchor.setTo(0.10, 0.5);
     
     lives.body.velocity.y = ASTEROID_VEL;
 }
@@ -209,6 +215,7 @@ function gameUpdate(){
     game.physics.arcade.overlap(enemies,platform,decreaseHealthBar,null,this);
     game.physics.arcade.overlap(heartLives,character,liveHit,null,this);
     
+    character.animations.play('idle');
 
     if(boolmouse){
         //movimiento con raton
@@ -217,7 +224,7 @@ function gameUpdate(){
             if (relativePos < 0){
                 if(characterIndex > 0 ){      
                     characterIndex--;
-                    character.body.position.setTo(thread_pos_array[characterIndex]-30,game.world.height - 93 );
+                    character.body.position.setTo(thread_pos_array[characterIndex]-37,game.world.height - 101 );
 
                     
                 }
@@ -225,7 +232,7 @@ function gameUpdate(){
             else if( relativePos > (thread_pos_array[characterIndex + 1] - thread_pos_array[characterIndex])){
                 if(characterIndex < n_webs -2) {
                 characterIndex++;
-                character.body.position.setTo(thread_pos_array[characterIndex]-30,game.world.height - 93 );
+                character.body.position.setTo(thread_pos_array[characterIndex]-37,game.world.height - 101 );
 
                 }
             }
@@ -236,7 +243,7 @@ function gameUpdate(){
             //left movement
             console.log('left');
             characterIndex--;
-            character.body.position.setTo(thread_pos_array[characterIndex]-30,game.world.height - 93 );
+            character.body.position.setTo(thread_pos_array[characterIndex]-37,game.world.height - 101 );
             
             freeInput=false;
             game.time.events.add(200, inputChorno,this);
@@ -244,8 +251,8 @@ function gameUpdate(){
             //right movement
             console.log('right');
             characterIndex++;
-            character.body.position.setTo(thread_pos_array[characterIndex]-30,game.world.height - 93 );
-            //character.animations.play('moveRight');
+            character.body.position.setTo(thread_pos_array[characterIndex]-37,game.world.height - 101 );
+            character.animations.play('character2');
             freeInput=false;
             game.time.events.add(200, inputChorno,this);
     
