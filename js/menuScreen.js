@@ -64,7 +64,7 @@ function initializeGame() {
     //gear button
     options = game.add.sprite(game.world.width -42, 8, 'options'); //options icon
     options.scale.setTo(0.5);
-    options.inputEnabled = false;
+    options.inputEnabled = true;
     //options.events.onInputOver.loadTexture('menuBox'); trying some thing XD
     options.events.onInputDown.add(showMenu, this);
     //options panel
