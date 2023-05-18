@@ -51,7 +51,7 @@ game.state.start('menu');
 
 function loadAssets() {
     console.log('arrancando');
-    game.load.image('sky', 'assets/sky.png');
+    game.load.image('sky', 'assets/sky1.png');
     game.load.image('ground', 'assets/ground.png');
     game.load.image('thread', 'assets/string.png');
     //game.load.image('character', 'assets/spriteCharacter.png');
@@ -130,11 +130,11 @@ function spawnEnemies() {
     let randomThread = thread_pos_array[randomIndex];
 
     let enemy = enemies.create(randomThread, 0, 'asteroid');
-    enemy.scale.setTo(0.1, 0.1);
-    enemy.anchor.setTo(0.3, 0.5);
+    enemy.scale.setTo(1, 1);
+    enemy.anchor.setTo(0.5, 0.5);
     
     enemy.body.velocity.y = ASTEROID_VEL;
-    enemy.body.angularVelocity = 100;
+    enemy.body.angularVelocity = 150;
 }
 
 function spawnLives() {
