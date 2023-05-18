@@ -45,6 +45,9 @@ function preloadAssets() {
     game.load.image('selectorOFF', 'assets/ui/grey_circle.png');
     game.load.image('selectorON', 'assets/ui/red_boxTick.png');
 
+    game.load.image('mouseOption', 'assets/ui/mouse.png');
+    game.load.image('keyboardOption', 'assets/ui/gamepad.png');
+
     //Music in the background thanks to https://www.FesliyanStudios.com
     //Tittle: Retro Platforming - David Fesliyan
     game.load.audio('music', ['assets/music/platformer.mp3']);
@@ -119,6 +122,11 @@ function initializeGame() {
     moveMOUSE.inputEnabled = true;
     moveMOUSE.events.onInputDown.add(playMOUSE, this);
     //moveMOUSE.visible = false;
+
+    var mouseIcon = game.add.sprite(game.world.width/2 + 35, game.world.height/2 + 45, 'mouseOption');
+    mouseIcon.scale.setTo(0.5);
+    var keyboardIcon = game.add.sprite(game.world.width/2 - 135, game.world.height/2 + 35, 'keyboardOption');
+    keyboardIcon.scale.setTo(0.7);
 
     let button = game.add.button(130, 500, '', changePlay);
     button.addChild(game.add.text(0, 0, "START GAME", {fontSize: '32px', fill: '#FFFFFF', backgroundColor: '#ADD8E6', hoverColor: '#87CEFA', padding:{x: 16, y: 8}}));
