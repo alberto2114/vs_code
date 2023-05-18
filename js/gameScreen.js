@@ -52,10 +52,10 @@ var crono = setInterval(actualizarCronometro, 1000);
 
 game.state.add('menu', startState);
 game.state.add('game', gameState);
-//game.state.add('final', finalState);
+game.state.add('final', finalState);
 //game.state.add('options', optionState);
 
-game.state.start('menu');
+game.state.start('final');
 
 function loadAssets() {
     console.log('arrancando');
