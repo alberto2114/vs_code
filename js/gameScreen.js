@@ -25,6 +25,7 @@ const VELOCIDAD_DISPARO = 200;
 let fireButton;
 
 let enemies;
+let heartLives;
 const ASTEROID_VEL = 200;
 
 var tiempoTexto;
@@ -58,6 +59,7 @@ function loadAssets() {
 
     game.load.image('disparo', 'assets/ammo.png');
     game.load.image('asteroid', 'assets/asteroid_test.png');
+    game.load.image("heart", "assets/heart.png");
 }
 
 
@@ -89,6 +91,7 @@ function initialiseGame(){
     character = game.add.sprite(thread_pos_array[characterIndex]-30,game.world.height - 93,'character');
     character.scale.setTo(0.5,0.5);
     game.physics.arcade.enable(character);
+    
 
     //character.animations.add('idle', ['character', 'character1'], 2, true);
     //character.animations.play('idle');
@@ -104,7 +107,11 @@ function initialiseGame(){
 
     enemies = game.add.group();
     enemies.enableBody = true;
-    game.time.events.loop(Phaser.Timer.SECOND * 1, spawnEnemies, this);
+    game.time.events.loop(Phaser.Timer.SECOND * 2, spawnEnemies, this);
+
+    heartLives = game.add.group();
+    heartLives.enableBody = true;
+    game.time.events.loop(Phaser.Timer.SECOND * 5, spawnLives, this);
 
     healthBar.style.display = "block";
     health = 100;
@@ -118,10 +125,21 @@ function spawnEnemies() {
     let randomThread = thread_pos_array[randomIndex];
 
     let enemy = enemies.create(randomThread, 0, 'asteroid');
-    enemy.scale.setTo(0.05, 0.05);
+    enemy.scale.setTo(0.1, 0.1);
     enemy.anchor.setTo(0.3, 0.5);
     
     enemy.body.velocity.y = ASTEROID_VEL;
+}
+
+function spawnLives() {
+    let randomIndex = Math.floor(Math.random() * (n_webs-1));
+    let randomThread = thread_pos_array[randomIndex];
+
+    let lives = heartLives.create(randomThread, 0, 'heart');
+    lives.scale.setTo(0.02, 0.02);
+    lives.anchor.setTo(0.3, 0.5);
+    
+    lives.body.velocity.y = ASTEROID_VEL;
 }
 
 function crearDisparos(num){
@@ -166,15 +184,14 @@ function decreaseHealthBar(enemy) {
     var failAudio = new Audio("assets/songs/Fail.mp3");
     if (health<=0){
         damageAudio.play();
-        //failAudio.play();  
+        failAudio.play(); 
         health = 0;
         clearInterval(crono);
         updateHealthBar();
         console.log("Has durado: " + tiempoTexto.text);
         console.log("Has conseguido " + puntuaje + " puntos");
-         
-        //alert("Has durado: " + tiempoTexto.text + " y has conseguido " + puntuaje + " puntos");
         music.stop();
+        //alert("Has durado: " + tiempoTexto.text + " y has conseguido " + puntuaje + " puntos");
         game.state.start('menu');
     }
     else{
@@ -190,6 +207,8 @@ function gameUpdate(){
     //collisions
     game.physics.arcade.overlap(enemies,disparos,enemyHit,null,this);
     game.physics.arcade.overlap(enemies,platform,decreaseHealthBar,null,this);
+    game.physics.arcade.overlap(heartLives,character,liveHit,null,this);
+    
 
     if(boolmouse){
         //movimiento con raton
@@ -244,6 +263,15 @@ function enemyHit(enemy,disparo){
     sumarPuntos();
     var boomAudio = new Audio("assets/songs/boom.mp3");
     boomAudio.play();
+
+}
+
+function liveHit(lives,character){
+    character.kill();
+    health = 100;
+    updateHealthBar();
+    var liveAudio = new Audio("assets/songs/Health.mp3");
+    liveAudio.play();
 
 }
 
