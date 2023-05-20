@@ -14,8 +14,8 @@ let thread_changer;
 let x_thread = 800 / n_webs;
 
 let thread_pos_array;
-let thread_inclined_array_ini;
-let thread_inclined_array_fin;
+let thread_inclined_array_ini = [];
+let thread_inclined_array_fin = [];
 let character;
 let characterIndex;
 let freeInput = true;
@@ -142,10 +142,12 @@ function spawnEnemies() {
     if (Math.random() < LEVEL_ENEMY_SPAWN_PROB[level - 1]) {
         let randomIndex = Math.floor(Math.random() * (n_webs - 1));
         let EThread = thread_pos_array[randomIndex];
+    
 
         let enemy = enemies.create(EThread, 0, 'asteroid');
         enemy.scale.setTo(1, 1);
         enemy.anchor.setTo(0.5, 0.5);
+        enemy.isChanging = false;
 
         enemy.body.velocity.y = LEVEL_ENEMY_VELOCITY[level - 1];
     }
@@ -289,6 +291,20 @@ function gameOver() {
 
 function changeThread(enemy, thread) {
     console.log("changeThread",thread.myValue);
+    
+    if(!enemy.isChanging){
+        /*//let difY = thread_inclined_array_fin[thread.myValue].y - thread_inclined_array_ini[thread.myValue].y;
+        //let difX =thread_inclined_array_fin[thread.myValue].x - thread_inclined_array_ini[thread.myValue].x;
+         let slope = Phaser.Math.angleBetween(thread_inclined_array_ini[thread.myValue].x,thread_inclined_array_ini[thread.myValue].y,thread_inclined_array_fin[thread.myValue].x,thread_inclined_array_fin[thread.myValue].y);
+        //let slope = difY/difX;
+        let slope2 = Phaser.Math.degToRad(slope);
+        enemy.body.velocity.x = enemy.body.velocity.y * Math.cos(slope2);
+        console.log(enemy.body.velocity.x, enemy.body.velocity.y);*/
+        //enemy.body.moveTo(thread_inclined_array_fin[thread.myValue].x,thread_inclined_array_fin[thread.myValue].y)
+        let tween = game.add.tween(enemy).to({x:thread_inclined_array_fin[thread.myValue].x ,y:thread_inclined_array_fin[thread.myValue].y },1000,Phaser.Easing.Linear.None,true);
+    }
+    enemy.isChanging = true;
+    
 }
 
 function enemyHit(enemy, disparo) {
@@ -377,8 +393,7 @@ function thread_creator(n_webs) {
 function thread_creator_V2() {
     let catetoX = 800 / n_webs;
     let catetoY;
-    thread_inclined_array_ini = [];
-    thread_inclined_array_fin = [];
+    
 
     for (let i = 0; i < n_webs - 2; i++) {
         let randomY = Math.floor(Math.random() * (400 - 40 + 1)); //puntoY del hilo1
@@ -397,9 +412,13 @@ function thread_creator_V2() {
             let point_fin = thread_changer_end.create(thread_pos_array[i] + catetoX, randomY2, 'purple');
             point_fin.anchor.setTo(0.5);
             point_fin.scale.setTo(0.5);
-
-            thread_inclined_array_ini.push([thread_pos_array[i], randomY]); //guardamos el PUNTO donde EMPIEZAN los hilos
-            thread_inclined_array_fin.push([thread_pos_array[i] + catetoX, randomY2]); //guardamos el PUNTO donde TERMINAN los hilos
+            
+            thread_inclined_array_ini.push({x: thread_pos_array[i], y: randomY});
+            thread_inclined_array_fin.push({x: thread_pos_array[i] + catetoX , y: randomY2 }); //guardamos el PUNTO donde TERMINAN los hilos
+        }
+        else{
+            thread_inclined_array_ini.push({x: 0, y: 0});
+            thread_inclined_array_fin.push({x: 0  , y: 0 });
         }
 
 
