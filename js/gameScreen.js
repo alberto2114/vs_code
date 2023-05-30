@@ -29,6 +29,7 @@ const VELOCIDAD_DISPARO = 200;
 let fireButton;
 
 let enemies;
+let bosses;
 
 
 const NUM_LEVELS = 3;
@@ -41,6 +42,7 @@ const ASTEROID_VEL = 200;
 var tiempoTexto;
 var tiempoTranscurrido = 0;
 var puntuaje = 0;
+var vidaBoss = 100;
 let healthBar = document.getElementById("healthBar");
 let health = 100;
 var textoParte;
@@ -68,8 +70,17 @@ function loadAssets() {
 
 
     game.load.image('disparo', 'assets/ammo.png');
-    game.load.image('asteroid', 'assets/asteroid_test.png');
+    game.load.image('asteroid', 'assets/enemy1.png');
     game.load.image("heart", "assets/heart.png");
+    game.load.image("finalBoss", "assets/boss.png");
+    game.load.image("finalBoss1", "assets/bossLife/boss1.png");
+    game.load.image("finalBoss2", "assets/bossLife/boss2.png");
+    game.load.image("finalBoss3", "assets/bossLife/boss3.png");
+    game.load.image("finalBoss4", "assets/bossLife/boss11.png");
+    game.load.image("finalBoss5", "assets/bossLife/boss12.png");
+    game.load.image("finalBoss6", "assets/bossLife/boss13.png");
+    game.load.image("finalBoss7", "assets/bossLife/boss21.png");
+    game.load.image("finalBoss8", "assets/bossLife/boss22.png");
 }
 
 
@@ -78,6 +89,8 @@ function initialiseGame(){
     game.physics.startSystem(Phaser.Physics.ARCADE);
 
     game.add.sprite(0, 0, 'sky');
+
+    
     
     //esconder raton
     //this.input.mouse.disableContextMenu();
@@ -129,12 +142,16 @@ function initialiseGame(){
     heartLives.enableBody = true;
     game.time.events.loop(Phaser.Timer.SECOND * 21, spawnLives, this);
 
+    bosses = game.add.group();
+    bosses.enableBody = true;
+
     healthBar.style.display = "block";
     health = 100;
     puntuaje = 0;
     updateHealthBar();
     tiempoTranscurrido = 0;
     crono = setInterval(actualizarCronometro, 1000);
+    spawnBoss();
 }
 function spawnEnemies() {
     if(Math.random() < LEVEL_ENEMY_SPAWN_PROB[level-1]){
@@ -142,7 +159,7 @@ function spawnEnemies() {
     let randomThread = thread_pos_array[randomIndex];
 
     let enemy = enemies.create(randomThread, 0, 'asteroid');
-    enemy.scale.setTo(1, 1);
+    enemy.scale.setTo(0.15, 0.15);
     enemy.anchor.setTo(0.5, 0.5);
     
     enemy.body.velocity.y = LEVEL_ENEMY_VELOCITY[level-1];
@@ -168,7 +185,7 @@ function crearDisparos(num){
     disparos.createMultiple(num,'disparo');
     //disparos.callAll('events.onOutofBounds.add','events.onOutOfBounds',resetMember);
     disparos.forEach(function(disparo){
-        disparo.scale.setTo(0.25,0.25);
+        disparo.scale.setTo(0.3,0.25);
     });
     
     
@@ -204,6 +221,7 @@ function decreaseHealthBar(enemy) {
     var failAudio = new Audio("assets/songs/Fail.mp3");
     if (health<=0){
         damageAudio.play();
+        failAudio.play();
         gameEnd = true;
     }
     else{
@@ -220,6 +238,8 @@ function gameUpdate(){
     game.physics.arcade.overlap(enemies,disparos,enemyHit,null,this);
     game.physics.arcade.overlap(enemies,platform,decreaseHealthBar,null,this);
     game.physics.arcade.overlap(heartLives,character,liveHit,null,this);
+    game.physics.arcade.overlap(bosses,disparos,bossLive,null,this);
+    game.physics.arcade.overlap(bosses,platform,decreaseBoss,null,this);
     
     character.animations.play('idle');
 
@@ -305,6 +325,8 @@ function liveHit(lives,character){
     liveAudio.play();
 
 }
+
+
 
 function manageShots(){
     if(fireButton.justDown && !boolmouse){
@@ -393,4 +415,48 @@ function thread_creator_V2(){
         thread_inclined_array_ini.push([thread_pos_array[i], randomY]); //guardamos el PUNTO donde EMPIEZAN los hilos
         thread_inclined_array_fin.push([thread_pos_array[i] + catetoX, randomY2]); //guardamos el PUNTO donde TERMINAN los hilos
     }
+}
+
+function spawnBoss() {
+    let randomIndex = Math.floor(Math.random() * (n_webs-1));
+    let randomThread = thread_pos_array[randomIndex];
+
+    var bossSpawn = new Audio("assets/songs/Boss.mp3");
+    bossSpawn.play();
+
+    let boss = bosses.create(randomThread, 0, 'finalBoss');
+    boss.scale.setTo(0.4, 0.4);
+    boss.anchor.setTo(0.5, 0.5);
+    
+    boss.body.velocity.y = 20;
+    boss.body.angularVelocity = 150;
+}
+
+function bossLive(boss,disparo){
+    vidaBoss-=1;
+    var hitBoss = new Audio("assets/songs/hitBoss.mp3");
+    if(vidaBoss<=0){
+        boss.kill();
+    }
+    if(vidaBoss<=90){boss.loadTexture("finalBoss1");}
+    if(vidaBoss<=80){boss.loadTexture("finalBoss2");}
+    if(vidaBoss<=70){boss.loadTexture("finalBoss3");}
+    if(vidaBoss<=60){boss.loadTexture("finalBoss4");}
+    if(vidaBoss<=50){boss.loadTexture("finalBoss5");}
+    if(vidaBoss<=40){boss.loadTexture("finalBoss6");}
+    if(vidaBoss<=30){boss.loadTexture("finalBoss7");}
+    if(vidaBoss<=20){boss.loadTexture("finalBoss8");}
+    disparo.kill();
+    
+    hitBoss.play();
+    
+}
+function decreaseBoss(boss) {
+    boss.kill();
+    health-=100;
+    var damageAudio = new Audio("assets/songs/damage.mp3");
+    var failAudio = new Audio("assets/songs/Fail.mp3");
+    damageAudio.play();
+    failAudio.play();
+    gameEnd = true;
 }

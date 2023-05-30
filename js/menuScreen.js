@@ -35,6 +35,7 @@ let fondo;
 
 function preloadAssets() {
     game.load.image('sky', 'assets/fondo3.jpg');
+    game.load.image("titulo", "assets/letras_titulo.png");
     //game.load.spritesheet(juego.world.centerX,juego.world.centerY ,'playButton', 'assets/playButton.png',336, 158, 2);
 
     game.load.image('options', 'assets/ui/options.png');
@@ -53,16 +54,26 @@ function preloadAssets() {
     game.load.image('mouseOption', 'assets/ui/mouse.png');
     game.load.image('keyboardOption', 'assets/ui/gamepad.png');
 
+
+
     //Music in the background thanks to https://www.FesliyanStudios.com
+
     //Tittle: Retro Platforming - David Fesliyan
     game.load.audio('music', ['assets/music/platformer.mp3']);
 }
 
 function initializeGame() {
 
+
+
     fondo=game.add.tileSprite(0 ,0 , 1920, 962, 'sky');
-    fondo.z=-1;
+    fondo.z=-10;
     fondo.scale.setTo(0.6231);
+
+    let titulo = game.add.sprite(50, 35, 'titulo');
+    titulo.z=10
+    titulo.scale.setTo(0.4);
+    //titulo.body.immovable = true;
 
 
     var healthBar = document.getElementById("healthBar");
