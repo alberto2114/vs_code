@@ -55,7 +55,7 @@ game.state.add('game', gameState);
 game.state.add('final', finalState);
 //game.state.add('options', optionState);
 
-game.state.start('final');
+game.state.start('menu');
 
 function loadAssets() {
     console.log('arrancando');
@@ -185,7 +185,7 @@ function actualizarCronometro(){
     var horas = Math.floor(tiempoTranscurrido/3600);
     var minutos = Math.floor((tiempoTranscurrido-(horas * 3600))/60);
     var segundos = Math.floor(tiempoTranscurrido - (horas*3600)-(minutos * 60));
-    var tiempoTextoFormateado = horas.toString().padStart(2, "0")+":"+minutos.toString().padStart(2, "0")+":"+segundos.toString().padStart(2, "0");
+    let tiempoTextoFormateado = horas.toString().padStart(2, "0")+":"+minutos.toString().padStart(2, "0")+":"+segundos.toString().padStart(2, "0");
     tiempoTexto.setText(tiempoTextoFormateado);
 }
 
@@ -281,7 +281,7 @@ function gameOver(){
     music.stop();
     level = 1;
     gameEnd = false;
-    game.state.start('menu');
+    game.state.start('final');
 }
 
 function enemyHit(enemy,disparo){
