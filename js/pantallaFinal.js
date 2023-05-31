@@ -9,6 +9,7 @@ let survivedTime;
 let survivedPoints;
 
 let leaderboard = [];
+let leaderboardPoints = [];
 
 function preloadAssets() {
     game.load.image('background', 'assets/sky2.png')
@@ -64,6 +65,8 @@ function initializeGame() {
     var panelButton3 = game.add.sprite(135, game.world.height/2 + 65, 'smallpanel');
     panelButton3.anchor.setTo(0.5);
     panelButton3.scale.setTo(1.05, 0.8);
+    panelButton3.inputEnabled = true;
+    panelButton3.events.onInputDown.add(backToMenu, this);
 
     var enterText = game.add.text(135, 220, 'Press ENTER to restart',
         {font: '16px Fantasy',
@@ -100,6 +103,7 @@ function initializeGame() {
 
     //mostrarLeaderboard();
     actualizarLeaderboard(tiempoTexto.text);
+    actualizarLeaderboardPoints(puntuaje);
     captureEnterKey();
 }
 
@@ -117,6 +121,22 @@ function actualizarLeaderboard(tiempo){
             leaderboard.pop(); // Limitar el leaderboard a los primeros tres tiempos
         }
     }
+}
+
+function actualizarLeaderboardPoints(puntos){
+    if (leaderboardPoints.length == 0) {
+        leaderboardPoints.push(puntos);
+    } 
+    else {
+        for (let i = 0; i < leaderboardPoints.length; i++) {
+            if (puntos >= leaderboardPoints[i]) {
+                leaderboardPoints.splice(i, 0, puntos);
+                break;}
+        }
+        if (leaderboardPoints.length > 3) {
+            leaderboardPoints.pop(); // Limitar el leaderboard a los primeros tres puntuajes
+        }
+    }
     mostrarLeaderboard();
 }
 
@@ -128,12 +148,19 @@ function mostrarLeaderboard(){
             align: 'center'});
         time.anchor.setTo(0.5);
     }
+    for (let i = leaderboardPoints.length - 1; i >= 0; i--) {
+        let time = game.add.text(game.world.width/2 + 190, 275 + i * 75, leaderboardPoints[i], {
+            font: '16px Fantasy',
+            fill: '#000000',
+            align: 'center'});
+        time.anchor.setTo(0.5);
+    }
 }
 
 function captureEnterKey() {
     let enterKey = game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
     enterKey.onDown.add(function() {
-        game.state.start('menu');
+        game.state.start('game');
     }, this);
 }
 
@@ -150,23 +177,27 @@ function showCredits(){
         align: 'center'});
 
     creditsText2 = game.add.text(game.world.width/2, game.world.height/2 + 60, 'Alberto Valls Martinez',
-    {font: '32px Fantasy',
-    fill: '#FFFFFF',
-    backgroundColor: '#e86a17',
-    stroke: '#000000',
-    strokeThickness: 6,
-    align: 'center'});
+        {font: '32px Fantasy',
+        fill: '#FFFFFF',
+        backgroundColor: '#e86a17',
+        stroke: '#000000',
+        strokeThickness: 6,
+        align: 'center'});
 
     creditsText3 = game.add.text(game.world.width/2, game.world.height/2 + 120, 'Jaime Perez Villena',
-    {font: '32px Fantasy',
-    fill: '#FFFFFF',
-    backgroundColor: '#e86a17',
-    stroke: '#000000',
-    strokeThickness: 6,
-    align: 'center'});
+        {font: '32px Fantasy',
+        fill: '#FFFFFF',
+        backgroundColor: '#e86a17',
+        stroke: '#000000',
+        strokeThickness: 6,
+        align: 'center'});
 
     game.time.events.add(Phaser.Timer.SECOND * 5, function() {
         creditsText1.destroy();
         creditsText2.destroy();
         creditsText3.destroy()});
+}
+
+function backToMenu(){
+    game.state.start('menu');
 }

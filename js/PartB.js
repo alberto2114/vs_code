@@ -216,6 +216,10 @@ function gameUpdate() {
     if (gameEnd) {
         gameOver();
     }
+
+    if(puntuaje >= 100){
+        game.state.start('final');
+    }
 }
 
 
