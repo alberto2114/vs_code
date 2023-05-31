@@ -174,13 +174,13 @@ function gameUpdate() {
         if (relativePos < 0) {
             if (characterIndex > 0) {
                 characterIndex--;
-                character.body.position.setTo(thread_pos_array[characterIndex] - 37, game.world.height - 101);
+                character.body.position.setTo(thread_pos_array[characterIndex] - 50, game.world.height - 101);
             }
         }
         else if (relativePos > (thread_pos_array[characterIndex + 1] - thread_pos_array[characterIndex])) {
             if (characterIndex < n_webs - 2) {
                 characterIndex++;
-                character.body.position.setTo(thread_pos_array[characterIndex] - 37, game.world.height - 101);
+                character.body.position.setTo(thread_pos_array[characterIndex] - 50, game.world.height - 101);
 
             }
         }
@@ -191,7 +191,7 @@ function gameUpdate() {
             //left movement
             console.log('left');
             characterIndex--;
-            character.body.position.setTo(thread_pos_array[characterIndex] - 37, game.world.height - 101);
+            character.body.position.setTo(thread_pos_array[characterIndex] - 50, game.world.height - 101);
 
             freeInput = false;
             game.time.events.add(650/n_webs, inputChorno, this);
@@ -199,7 +199,7 @@ function gameUpdate() {
             //right movement
             console.log('right');
             characterIndex++;
-            character.body.position.setTo(thread_pos_array[characterIndex] - 37, game.world.height - 101);
+            character.body.position.setTo(thread_pos_array[characterIndex] - 50, game.world.height - 101);
             character.animations.play('character2');
             freeInput = false;
             game.time.events.add(650/n_webs, inputChorno, this);
