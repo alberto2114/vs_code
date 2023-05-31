@@ -105,7 +105,7 @@ function initializeGame() {
 
     //mostrarLeaderboard();
     game.time.events.add(Phaser.Timer.SECOND * 20, function() {
-        game.state.start('game');});
+        game.state.start('menu');});
 
     actualizarLeaderboard(tiempoTexto.text);
     actualizarLeaderboardPoints(puntuaje);
