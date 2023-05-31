@@ -50,7 +50,7 @@ var textoLevel;
 let level = 1;
 
 
-var crono = setInterval(actualizarCronometro, 1000);
+//var crono = setInterval(actualizarCronometro, 1000);
 
 game.state.add('menu', startState);
 game.state.add('game', gameState);
@@ -121,7 +121,7 @@ function initialiseGame(){
 
     
     
-    character = game.add.sprite(thread_pos_array[characterIndex]-37,game.world.height - 101,'character');
+    character = game.add.sprite(thread_pos_array[characterIndex]-50,game.world.height - 101,'character');
     character.scale.setTo(0.5,0.5);
     game.physics.arcade.enable(character);
     
@@ -151,7 +151,7 @@ function initialiseGame(){
     updateHealthBar();
     tiempoTranscurrido = 0;
     crono = setInterval(actualizarCronometro, 1000);
-    spawnBoss();
+    //spawnBoss();
 }
 function spawnEnemies() {
     if(Math.random() < LEVEL_ENEMY_SPAWN_PROB[level-1]){
@@ -172,7 +172,7 @@ function spawnLives() {
     let randomIndex = Math.floor(Math.random() * (n_webs-1));
     let randomThread = thread_pos_array[randomIndex];
 
-    let lives = heartLives.create(randomThread, 0, 'heart');
+    let lives = heartLives.create(randomThread-15, 0, 'heart');
     lives.scale.setTo(0.02, 0.02);
     lives.anchor.setTo(0.10, 0.5);
     
@@ -250,7 +250,7 @@ function gameUpdate(){
             if (relativePos < 0){
                 if(characterIndex > 0 ){      
                     characterIndex--;
-                    character.body.position.setTo(thread_pos_array[characterIndex]-37,game.world.height - 101 );
+                    character.body.position.setTo(thread_pos_array[characterIndex]-50,game.world.height - 101 );
 
 
                 }
@@ -258,7 +258,7 @@ function gameUpdate(){
             else if( relativePos > (thread_pos_array[characterIndex + 1] - thread_pos_array[characterIndex])){
                 if(characterIndex < n_webs -2) {
                 characterIndex++;
-                character.body.position.setTo(thread_pos_array[characterIndex]-37,game.world.height - 101 );
+                character.body.position.setTo(thread_pos_array[characterIndex]-50,game.world.height - 101 );
 
                 }
             }
@@ -269,7 +269,7 @@ function gameUpdate(){
             //left movement
             console.log('left');
             characterIndex--;
-            character.body.position.setTo(thread_pos_array[characterIndex]-37,game.world.height - 101 );
+            character.body.position.setTo(thread_pos_array[characterIndex]-50,game.world.height - 101 );
 
             freeInput=false;
             game.time.events.add(200, inputChorno,this);
@@ -277,7 +277,7 @@ function gameUpdate(){
             //right movement
             console.log('right');
             characterIndex++;
-            character.body.position.setTo(thread_pos_array[characterIndex]-37,game.world.height - 101 );
+            character.body.position.setTo(thread_pos_array[characterIndex]-50,game.world.height - 101 );
             character.animations.play('character2');
             freeInput=false;
             game.time.events.add(200, inputChorno,this);
@@ -339,8 +339,8 @@ function manageShots(){
 }
 
 function fireShot(){
-    let shotX = character.x+9 + character.width/4;
-    let shotY = character.y+-32;
+    let shotX = character.x+3 + character.width/4;
+    let shotY = character.y+-40;
     let shotVel = -VELOCIDAD_DISPARO;
     let shot = kaboom(shotX, shotY,shotVel);
     var shootAudio = new Audio("assets/songs/Shoot.mp3");
