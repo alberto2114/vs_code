@@ -144,7 +144,7 @@ function initialiseGame() {
     heartLives.enableBody = true;
     game.time.events.loop(Phaser.Timer.SECOND * 21, spawnLives, this);
 
-    bosses = game.add.group();
+    bosses = game.add.group(); //parte c
     bosses.enableBody = true;
 
     healthBar.style.display = "block";
@@ -242,7 +242,7 @@ function gameUpdate() {
     game.physics.arcade.overlap(enemies, platform, decreaseHealthBar, null, this);
     game.physics.arcade.overlap(heartLives, character, liveHit, null, this);
     game.physics.arcade.overlap(enemies, thread_changer_init, changeThread, null, this);
-    game.physics.arcade.overlap(bosses,disparos,bossLive,null,this);
+    game.physics.arcade.overlap(bosses,disparos,bossLive,null,this); //parte c
     game.physics.arcade.overlap(bosses,platform,decreaseBoss,null,this);
     
     character.animations.play('idle');

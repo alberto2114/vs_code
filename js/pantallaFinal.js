@@ -3,8 +3,9 @@
 let finalState = {
     preload:preloadAssets,
     create:initializeGame,
+    update:updateFinal
 };
-
+//let fondo;
 let survivedTime;
 let survivedPoints;
 
@@ -12,7 +13,7 @@ let leaderboard = [];
 let leaderboardPoints = [];
 
 function preloadAssets() {
-    game.load.image('background', 'assets/sky2.png')
+    game.load.image('background', 'assets/fondo3.jpg')
     game.load.image('panel', 'assets/ui/red_panel.png');
     game.load.image('smallpanel', 'assets/ui/red_button11.png');
     game.load.image('barrasHorizontal', 'assets/ui/barsHorizontal.png');
@@ -29,8 +30,9 @@ function preloadAssets() {
 
 function initializeGame() {
 
-    var fondo = game.add.sprite(0, 0, 'background');
-    fondo.z = -1;
+    fondo = game.add.tileSprite(0, 0, 1920, 962, 'background');
+    fondo.z=-10;
+    fondo.scale.setTo(0.6231);
 
     var panel = game.add.sprite(game.world.width/2 + 80, game.world.height/2, 'panel');
     panel.anchor.setTo(0.5);
@@ -105,6 +107,10 @@ function initializeGame() {
     actualizarLeaderboard(tiempoTexto.text);
     actualizarLeaderboardPoints(puntuaje);
     captureEnterKey();
+}
+
+function updateFinal(){
+    fondo.tilePosition.x -=1;
 }
 
 function actualizarLeaderboard(tiempo){
