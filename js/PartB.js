@@ -19,11 +19,6 @@ const LEVEL_ENEMY_SPAWN_PROB_B = [0.5, 0.75, 1];
 const LEVEL_ENEMY_VELOCITY_B = [20, 220, 235];
 const SCORE_TO_NEXT_LEVEL_B = 50;
 
-
-
-
-var crono = setInterval(actualizarCronometro, 1000);
-
 function loadAssets() {
     console.log('arrancando');
     game.load.image('sky', 'assets/sky1.png');
@@ -73,6 +68,7 @@ function initialiseGame() {
 
     tiempoTexto = this.add.text(3, 10, "00:00:00", { font: "20px Arial", fill: "white", stroke: "black", strokeThickness: 4 });
     textoPuntuaje = this.add.text(3, 40, "Points: 0", { font: "20px Arial", fill: "white", stroke: "black", strokeThickness: 4 });
+    textoPuntuaje.setText("Points: " + puntuaje);
     textoParte = this.add.text(739, 10, "Part B", { font: "20px Arial", fill: "white", stroke: "black", strokeThickness: 4 });
     textoLevel = this.add.text(746, 40, "Lvl " + level, { font: "20px Arial", fill: "white", stroke: "black", strokeThickness: 4 });
 
@@ -88,10 +84,7 @@ function initialiseGame() {
 
     healthBar.style.display = "block";
     health = 100;
-    puntuaje = 0;
     updateHealthBar();
-    tiempoTranscurrido = 0;
-    crono = setInterval(actualizarCronometro, 1000);
 }
 function spawnEnemies() {
     if (Math.random() < LEVEL_ENEMY_SPAWN_PROB_B[level - 1]) {
@@ -132,15 +125,6 @@ function crearDisparos(num) {
 
 function resetMember(item) {
     item.kill();
-}
-
-function actualizarCronometro() {
-    tiempoTranscurrido++;
-    var horas = Math.floor(tiempoTranscurrido / 3600);
-    var minutos = Math.floor((tiempoTranscurrido - (horas * 3600)) / 60);
-    var segundos = Math.floor(tiempoTranscurrido - (horas * 3600) - (minutos * 60));
-    var tiempoTextoFormateado = horas.toString().padStart(2, "0") + ":" + minutos.toString().padStart(2, "0") + ":" + segundos.toString().padStart(2, "0");
-    tiempoTexto.setText(tiempoTextoFormateado);
 }
 
 

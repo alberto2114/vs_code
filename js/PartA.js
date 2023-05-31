@@ -45,7 +45,7 @@ let textoLevel;
 
 
 
-var crono = setInterval(actualizarCronometro, 1000);
+let crono = setInterval(actualizarCronometro, 1000);
 
 game.state.add('menu', startState);
 game.state.add('game', partAState);
@@ -116,7 +116,6 @@ function initialiseGameA() {
     puntuaje = 0;
     updateHealthBar();
     tiempoTranscurrido = 0;
-    crono = setInterval(actualizarCronometro, 1000);
 }
 function spawnEnemies() {
     if (Math.random() < LEVEL_ENEMY_SPAWN_PROB[level - 1]) {
