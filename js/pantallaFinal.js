@@ -104,6 +104,9 @@ function initializeGame() {
     survivedPoints.anchor.setTo(0.5);
 
     //mostrarLeaderboard();
+    game.time.events.add(Phaser.Timer.SECOND * 20, function() {
+        game.state.start('game');});
+
     actualizarLeaderboard(tiempoTexto.text);
     actualizarLeaderboardPoints(puntuaje);
     captureEnterKey();
