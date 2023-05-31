@@ -30,6 +30,7 @@ let fireButton;
 
 let enemies;
 let EThread;
+let bosses;
 
 
 const NUM_LEVELS = 3;
@@ -41,6 +42,7 @@ let heartLives;
 var tiempoTexto;
 var tiempoTranscurrido = 0;
 var puntuaje = 0;
+var vidaBoss = 100;
 let healthBar = document.getElementById("healthBar");
 let health = 100;
 var textoParte;
@@ -48,7 +50,7 @@ var textoLevel;
 let level = 1;
 
 
-var crono = setInterval(actualizarCronometro, 1000);
+//var crono = setInterval(actualizarCronometro, 1000);
 
 game.state.add('menu', startState);
 game.state.add('game', gameState);
@@ -67,8 +69,17 @@ function loadAssets() {
 
 
     game.load.image('disparo', 'assets/ammo.png');
-    game.load.image('asteroid', 'assets/asteroid_test.png');
+    game.load.image('asteroid', 'assets/enemy1.png');
     game.load.image("heart", "assets/heart.png");
+    game.load.image("finalBoss", "assets/boss.png");
+    game.load.image("finalBoss1", "assets/bossLife/boss1.png");
+    game.load.image("finalBoss2", "assets/bossLife/boss2.png");
+    game.load.image("finalBoss3", "assets/bossLife/boss3.png");
+    game.load.image("finalBoss4", "assets/bossLife/boss11.png");
+    game.load.image("finalBoss5", "assets/bossLife/boss12.png");
+    game.load.image("finalBoss6", "assets/bossLife/boss13.png");
+    game.load.image("finalBoss7", "assets/bossLife/boss21.png");
+    game.load.image("finalBoss8", "assets/bossLife/boss22.png");
 }
 
 
@@ -110,10 +121,10 @@ function initialiseGame() {
     console.log(thread_inclined_array_fin);
     characterIndex = 0;
 
-
-
-    character = game.add.sprite(thread_pos_array[characterIndex] - 37, game.world.height - 101, 'character');
-    character.scale.setTo(0.5, 0.5);
+    
+    
+    character = game.add.sprite(thread_pos_array[characterIndex]-50,game.world.height - 101,'character');
+    character.scale.setTo(0.5,0.5);
     game.physics.arcade.enable(character);
 
     character.animations.add('idle', [0, 1], 2.5, true);
@@ -133,12 +144,16 @@ function initialiseGame() {
     heartLives.enableBody = true;
     game.time.events.loop(Phaser.Timer.SECOND * 21, spawnLives, this);
 
+    bosses = game.add.group();
+    bosses.enableBody = true;
+
     healthBar.style.display = "block";
     health = 100;
     puntuaje = 0;
     updateHealthBar();
     tiempoTranscurrido = 0;
     crono = setInterval(actualizarCronometro, 1000);
+    //spawnBoss();
 }
 function spawnEnemies() {
     if (Math.random() < LEVEL_ENEMY_SPAWN_PROB[level - 1]) {
@@ -146,12 +161,11 @@ function spawnEnemies() {
         let EThread = thread_pos_array[randomIndex];
     
 
-        let enemy = enemies.create(EThread, 0, 'asteroid');
-        enemy.scale.setTo(1, 1);
-        enemy.anchor.setTo(0.5, 0.5);
-        enemy.isChanging = false;
-
-        enemy.body.velocity.y = LEVEL_ENEMY_VELOCITY[level - 1];
+    let enemy = enemies.create(randomThread, 0, 'asteroid');
+    enemy.scale.setTo(0.15, 0.15);
+    enemy.anchor.setTo(0.5, 0.5);
+    
+    enemy.body.velocity.y = LEVEL_ENEMY_VELOCITY[level-1];
     }
 
     //enemy.body.angularVelocity = 150;
@@ -161,7 +175,7 @@ function spawnLives() {
     let randomIndex = Math.floor(Math.random() * (n_webs - 1));
     let randomThread = thread_pos_array[randomIndex];
 
-    let lives = heartLives.create(randomThread, 0, 'heart');
+    let lives = heartLives.create(randomThread-15, 0, 'heart');
     lives.scale.setTo(0.02, 0.02);
     lives.anchor.setTo(0.10, 0.5);
 
@@ -173,8 +187,8 @@ function crearDisparos(num) {
     disparos.enableBody = true;
     disparos.createMultiple(num, 'disparo');
     //disparos.callAll('events.onOutofBounds.add','events.onOutOfBounds',resetMember);
-    disparos.forEach(function (disparo) {
-        disparo.scale.setTo(0.25, 0.25);
+    disparos.forEach(function(disparo){
+        disparo.scale.setTo(0.3,0.25);
     });
 
 
@@ -210,6 +224,7 @@ function decreaseHealthBar(enemy) {
     var failAudio = new Audio("assets/songs/Fail.mp3");
     if (health <= 0) {
         damageAudio.play();
+        failAudio.play();
         gameEnd = true;
     }
     else {
@@ -227,22 +242,28 @@ function gameUpdate() {
     game.physics.arcade.overlap(enemies, platform, decreaseHealthBar, null, this);
     game.physics.arcade.overlap(heartLives, character, liveHit, null, this);
     game.physics.arcade.overlap(enemies, thread_changer_init, changeThread, null, this);
+    game.physics.arcade.overlap(bosses,disparos,bossLive,null,this);
+    game.physics.arcade.overlap(bosses,platform,decreaseBoss,null,this);
+    
     character.animations.play('idle');
 
     if (boolmouse) {
         //movimiento con raton
-        mouseX = game.input.mousePointer.x;
-        let relativePos = mouseX - thread_pos_array[characterIndex] + (x_thread / 4);
-        if (relativePos < 0) {
-            if (characterIndex > 0) {
-                characterIndex--;
-                character.body.position.setTo(thread_pos_array[characterIndex] - 37, game.world.height - 101);
+            mouseX = game.input.mousePointer.x;
+            let relativePos = mouseX - thread_pos_array[characterIndex]+(x_thread/2);
+            if (relativePos < 0){
+                if(characterIndex > 0 ){      
+                    characterIndex--;
+                    character.body.position.setTo(thread_pos_array[characterIndex]-50,game.world.height - 101 );
+
+
+                }
             }
         }
         else if (relativePos > (thread_pos_array[characterIndex + 1] - thread_pos_array[characterIndex])) {
             if (characterIndex < n_webs - 2) {
                 characterIndex++;
-                character.body.position.setTo(thread_pos_array[characterIndex] - 37, game.world.height - 101);
+                character.body.position.setTo(thread_pos_array[characterIndex]-50,game.world.height - 101 );
 
             }
         }
@@ -253,7 +274,7 @@ function gameUpdate() {
             //left movement
             console.log('left');
             characterIndex--;
-            character.body.position.setTo(thread_pos_array[characterIndex] - 37, game.world.height - 101);
+            character.body.position.setTo(thread_pos_array[characterIndex] - 50, game.world.height - 101);
 
             freeInput = false;
             game.time.events.add(650/n_webs, inputChorno, this);
@@ -261,7 +282,7 @@ function gameUpdate() {
             //right movement
             console.log('right');
             characterIndex++;
-            character.body.position.setTo(thread_pos_array[characterIndex] - 37, game.world.height - 101);
+            character.body.position.setTo(thread_pos_array[characterIndex] - 50, game.world.height - 101);
             character.animations.play('character2');
             freeInput = false;
             game.time.events.add(650/n_webs, inputChorno, this);
@@ -337,9 +358,9 @@ function manageShots() {
     }
 }
 
-function fireShot() {
-    let shotX = character.x + 9 + character.width / 4;
-    let shotY = character.y + -32;
+function fireShot(){
+    let shotX = character.x+3 + character.width/4;
+    let shotY = character.y+-40;
     let shotVel = -VELOCIDAD_DISPARO;
     let shot = kaboom(shotX, shotY, shotVel);
     var shootAudio = new Audio("assets/songs/Shoot.mp3");
@@ -465,12 +486,57 @@ function thread_creator_V2(direction) {
             }
     }
 
-if(thread_changer_init.countLiving() === 0){
-    thread_inclined_array_ini= [];
-    thread_inclined_array_fin= [];
-   return thread_creator_V2(true);
-}
+    if(thread_changer_init.countLiving() === 0){
+        thread_inclined_array_ini= [];
+        thread_inclined_array_fin= [];
+        return thread_creator_V2(true);
+    }
     
 }
 
 
+
+
+function spawnBoss() {
+    let randomIndex = Math.floor(Math.random() * (n_webs-1));
+    let randomThread = thread_pos_array[randomIndex];
+
+    var bossSpawn = new Audio("assets/songs/Boss.mp3");
+    bossSpawn.play();
+
+    let boss = bosses.create(randomThread, 0, 'finalBoss');
+    boss.scale.setTo(0.4, 0.4);
+    boss.anchor.setTo(0.5, 0.5);
+    
+    boss.body.velocity.y = 20;
+    boss.body.angularVelocity = 150;
+}
+
+function bossLive(boss,disparo){
+    vidaBoss-=1;
+    var hitBoss = new Audio("assets/songs/hitBoss.mp3");
+    if(vidaBoss<=0){
+        boss.kill();
+    }
+    if(vidaBoss<=90){boss.loadTexture("finalBoss1");}
+    if(vidaBoss<=80){boss.loadTexture("finalBoss2");}
+    if(vidaBoss<=70){boss.loadTexture("finalBoss3");}
+    if(vidaBoss<=60){boss.loadTexture("finalBoss4");}
+    if(vidaBoss<=50){boss.loadTexture("finalBoss5");}
+    if(vidaBoss<=40){boss.loadTexture("finalBoss6");}
+    if(vidaBoss<=30){boss.loadTexture("finalBoss7");}
+    if(vidaBoss<=20){boss.loadTexture("finalBoss8");}
+    disparo.kill();
+    
+    hitBoss.play();
+    
+}
+function decreaseBoss(boss) {
+    boss.kill();
+    health-=100;
+    var damageAudio = new Audio("assets/songs/damage.mp3");
+    var failAudio = new Audio("assets/songs/Fail.mp3");
+    damageAudio.play();
+    failAudio.play();
+    gameEnd = true;
+}

@@ -10,6 +10,7 @@
 let startState = {
     preload: preloadAssets,
     create: initializeGame,
+    update: gameUpdate
 };
 
 let optionsMenu;
@@ -17,6 +18,8 @@ var sliderCheck;
 var sliderBar;
 var menuBox;
 var someText;
+var mouseIcon;
+var keyboardIcon;
 
 let music;
 var musicButton;
@@ -28,8 +31,11 @@ let boolmouse;
 
 let n_webs = 4;
 
+let fondo;
+
 function preloadAssets() {
-    game.load.image('sky', 'assets/sky1.png');
+    game.load.image('sky', 'assets/fondo3.jpg');
+    game.load.image("titulo", "assets/letras_titulo.png");
     //game.load.spritesheet(juego.world.centerX,juego.world.centerY ,'playButton', 'assets/playButton.png',336, 158, 2);
 
     game.load.image('options', 'assets/ui/options.png');
@@ -48,15 +54,27 @@ function preloadAssets() {
     game.load.image('mouseOption', 'assets/ui/mouse.png');
     game.load.image('keyboardOption', 'assets/ui/gamepad.png');
 
+
+
     //Music in the background thanks to https://www.FesliyanStudios.com
+
     //Tittle: Retro Platforming - David Fesliyan
     game.load.audio('music', ['assets/music/platformer.mp3']);
 }
 
 function initializeGame() {
 
-    var fondo = game.add.sprite(0, 0, 'sky');
-    fondo.z = -1;
+
+
+    fondo=game.add.tileSprite(0 ,0 , 1920, 962, 'sky');
+    fondo.z=-10;
+    fondo.scale.setTo(0.6231);
+
+    let titulo = game.add.sprite(50, 35, 'titulo');
+    titulo.z=10
+    titulo.scale.setTo(0.4);
+    //titulo.body.immovable = true;
+
 
     var healthBar = document.getElementById("healthBar");
     healthBar.style.display = 'none';
@@ -123,15 +141,17 @@ function initializeGame() {
     moveMOUSE.events.onInputDown.add(playMOUSE, this);
     //moveMOUSE.visible = false;
 
-    var mouseIcon = game.add.sprite(game.world.width/2 + 35, game.world.height/2 + 45, 'mouseOption');
+    mouseIcon = game.add.sprite(game.world.width/2 + 35, game.world.height/2 + 45, 'mouseOption');
     mouseIcon.scale.setTo(0.5);
-    var keyboardIcon = game.add.sprite(game.world.width/2 - 135, game.world.height/2 + 35, 'keyboardOption');
+    keyboardIcon = game.add.sprite(game.world.width/2 - 135, game.world.height/2 + 35, 'keyboardOption');
     keyboardIcon.scale.setTo(0.7);
 
     let button = game.add.button(130, 500, '', changePlay);
     button.addChild(game.add.text(0, 0, "START GAME", {fontSize: '32px', fill: '#FFFFFF', backgroundColor: '#ADD8E6', hoverColor: '#87CEFA', padding:{x: 16, y: 8}}));
 
     
+
+
     //buttonPlay = new Button(0.5,0.45,'playButton', changePlay);
     //playButton = game.add.button(game.world.centerX, game.world.centerY, 'playButton', this.changePlay, this);
 
@@ -178,11 +198,14 @@ function turnMusic(){
         menuBox.visible = false;
         someText.visible = false;
 
+
         musicButton.visible = false;
         someMusicText.visible = false;
 
         moveWASD.visible = false;
         moveMOUSE.visible = false;
+        mouseIcon.visible = false;
+        keyboardIcon.visible = false;
     }
     else{
         optionsMenu.visible = true;
@@ -191,12 +214,18 @@ function turnMusic(){
         menuBox.visible = true;
         someText.visible = true;
 
+
         musicButton.visible = true;
         someMusicText.visible = true;
 
         moveWASD.visible = true;
         moveMOUSE.visible = true;
+        mouseIcon.visible = true;
+        keyboardIcon.visible = true;
     }
+}
+function gameUpdate(){
+    fondo.tilePosition.x-=1;
 }
 
 function handleSliderCheck() {
