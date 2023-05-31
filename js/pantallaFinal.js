@@ -58,6 +58,8 @@ function initializeGame() {
     var panelButton2 = game.add.sprite(135, game.world.height/2 - 5, 'smallpanel');
     panelButton2.anchor.setTo(0.5);
     panelButton2.scale.setTo(1.05, 0.8);
+    panelButton2.inputEnabled = true;
+    panelButton2.events.onInputDown.add(showCredits, this);
 
     var panelButton3 = game.add.sprite(135, game.world.height/2 + 65, 'smallpanel');
     panelButton3.anchor.setTo(0.5);
@@ -133,4 +135,38 @@ function captureEnterKey() {
     enterKey.onDown.add(function() {
         game.state.start('menu');
     }, this);
+}
+
+function showCredits(){
+    console.log('muestra creditos');
+    var creditsText1, creditsText2, creditsText3;
+
+    creditsText1 = game.add.text(game.world.width/2, game.world.height/2, 'Pau Martinez Fortuny',
+        {font: '32px Fantasy',
+        fill: '#FFFFFF',
+        backgroundColor: '#e86a17',
+        stroke: '#000000',
+        strokeThickness: 6,
+        align: 'center'});
+
+    creditsText2 = game.add.text(game.world.width/2, game.world.height/2 + 60, 'Alberto Valls Martinez',
+    {font: '32px Fantasy',
+    fill: '#FFFFFF',
+    backgroundColor: '#e86a17',
+    stroke: '#000000',
+    strokeThickness: 6,
+    align: 'center'});
+
+    creditsText3 = game.add.text(game.world.width/2, game.world.height/2 + 120, 'Jaime Perez Villena',
+    {font: '32px Fantasy',
+    fill: '#FFFFFF',
+    backgroundColor: '#e86a17',
+    stroke: '#000000',
+    strokeThickness: 6,
+    align: 'center'});
+
+    game.time.events.add(Phaser.Timer.SECOND * 5, function() {
+        creditsText1.destroy();
+        creditsText2.destroy();
+        creditsText3.destroy()});
 }
