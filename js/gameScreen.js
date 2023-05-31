@@ -365,7 +365,7 @@ function subirLevel() {
     var levelAudio = new Audio("assets/songs/levelUp.mp3");
     levelAudio.play();
     if(level ==2){
-    thread_creator_V2(true, n_webs-1)  
+    thread_creator_V2(false)  
     console.log(thread_inclined_array_fin);
     }
     if (level == 3){
@@ -430,38 +430,36 @@ function thread_creator_V2(direction) {
     }
 
     else if(!direction){
-        while(empty){
-        for (let i = 0; i = n_webs - 2; i++) {
+        
+        for (let i = 1; i < n_webs - 1; i++) {
                 let randomY = Math.floor(Math.random() * (400 - 40 + 1)); //puntoY del hilo1
                 let randomY2 = Math.floor(Math.random() * (300 - 40 + 1)) + randomY / 6; //puntoY del hilo2
                 catetoY = randomY2 - randomY;
-                if (randomY > randomY2) {
+                if (randomY < randomY2) {
                     empty = false;
                     let web_inclined_thread = game.add.graphics(0, 0);
                     web_inclined_thread.lineStyle(3, 0x800080);
-                    web_inclined_thread.moveTo(thread_pos_array[i], randomY2); //thread_pos_array[i] es el puntoX del hilo1
-                    web_inclined_thread.lineTo(thread_pos_array[i] + catetoX, randomY); //thread_pos_array[i] + catetoX es el puntoX del hilo2
+                    web_inclined_thread.moveTo(thread_pos_array[i], randomY); //thread_pos_array[i] es el puntoX del hilo1
+                    web_inclined_thread.lineTo(thread_pos_array[i] - catetoX, randomY2); //thread_pos_array[i] + catetoX es el puntoX del hilo2
 
-                    let point_ini = thread_changer_init.create(thread_pos_array[i], randomY2, 'purple', thread_inclined_array_ini.length);
-                    point_ini.myValue = i; //generar los puntos de inicio y final de hilos (sprites)
+                    let point_ini = thread_changer_init.create(thread_pos_array[i], randomY, 'purple', thread_inclined_array_ini.length);
+                    point_ini.myValue = thread_inclined_array_ini.length; //generar los puntos de inicio y final de hilos (sprites)
                     point_ini.anchor.setTo(0.5);
                     point_ini.scale.setTo(0.5);
-                    let point_fin = thread_changer_end.create(thread_pos_array[i] + catetoX, randomY, 'purple');
+                    let point_fin = thread_changer_end.create(thread_pos_array[i] - catetoX, randomY2, 'purple');
                     point_fin.anchor.setTo(0.5);
                     point_fin.scale.setTo(0.5);
                     
-                    thread_inclined_array_ini.push({x: thread_pos_array[i], y: randomY2});
-                    thread_inclined_array_fin.push({x: thread_pos_array[i] + catetoX , y: randomY }); //guardamos el PUNTO donde TERMINAN los hilos
+                    thread_inclined_array_ini.push({x: thread_pos_array[i], y: randomY});
+                    thread_inclined_array_fin.push({x: thread_pos_array[i] - catetoX , y: randomY2 }); //guardamos el PUNTO donde TERMINAN los hilos
                 }
                 else{
                     thread_inclined_array_ini.push({x: 0, y: 0});
                     thread_inclined_array_fin.push({x: 0  , y: 0 });
                 }
             }
-    } 
-
     }
-    
+
     
 }
 
