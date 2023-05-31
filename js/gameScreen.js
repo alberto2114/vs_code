@@ -63,7 +63,6 @@ function loadAssets() {
     game.load.image('ground', 'assets/ground.png');
     game.load.image('thread', 'assets/string.png');
     game.load.image('purple', 'assets/trajectory_changer.png');
-    //game.load.image('character', 'assets/spriteCharacter.png');
     game.load.spritesheet('character', 'assets/spriteSheet.png', 198.5, 211);
 
 
@@ -228,20 +227,16 @@ function gameUpdate() {
     game.physics.arcade.overlap(enemies, platform, decreaseHealthBar, null, this);
     game.physics.arcade.overlap(heartLives, character, liveHit, null, this);
     game.physics.arcade.overlap(enemies, thread_changer_init, changeThread, null, this);
-    //game.physics.arcade.overlap(enemies,extra_thread_changer_init,changeThread2,null,this);
-
     character.animations.play('idle');
 
     if (boolmouse) {
         //movimiento con raton
         mouseX = game.input.mousePointer.x;
-        let relativePos = mouseX - thread_pos_array[characterIndex] + (x_thread / 2);
+        let relativePos = mouseX - thread_pos_array[characterIndex] + (x_thread / 4);
         if (relativePos < 0) {
             if (characterIndex > 0) {
                 characterIndex--;
                 character.body.position.setTo(thread_pos_array[characterIndex] - 37, game.world.height - 101);
-
-
             }
         }
         else if (relativePos > (thread_pos_array[characterIndex + 1] - thread_pos_array[characterIndex])) {
@@ -261,7 +256,7 @@ function gameUpdate() {
             character.body.position.setTo(thread_pos_array[characterIndex] - 37, game.world.height - 101);
 
             freeInput = false;
-            game.time.events.add(500/n_webs, inputChorno, this);
+            game.time.events.add(650/n_webs, inputChorno, this);
         } else if (cursors.right.isDown && characterIndex < n_webs - 2 && freeInput == true) {
             //right movement
             console.log('right');
@@ -269,7 +264,7 @@ function gameUpdate() {
             character.body.position.setTo(thread_pos_array[characterIndex] - 37, game.world.height - 101);
             character.animations.play('character2');
             freeInput = false;
-            game.time.events.add(500/n_webs, inputChorno, this);
+            game.time.events.add(650/n_webs, inputChorno, this);
 
         }
     }
@@ -283,9 +278,10 @@ function gameUpdate() {
 function changeThread(enemy, thread) {
     console.log("changeThread",thread.myValue);
    
-    if(!enemy.isChanging){
+    if(Math.random() < 0.4 && !enemy.isChanging){
         
         let tween = game.add.tween(enemy).to({x:thread_inclined_array_fin[thread.myValue].x ,y:thread_inclined_array_fin[thread.myValue].y },1000/(n_webs/10),Phaser.Easing.Linear.None,true);
+        
     }
     enemy.isChanging = true;
     
@@ -396,11 +392,10 @@ function thread_creator_V2(direction) {
     if(direction){
         
                 for (let i = 0; i < n_webs - 2; i++) {
-                        let randomY = Math.floor(Math.random() * (400 - 40 + 1)); //puntoY del hilo1
-                        let randomY2 = Math.floor(Math.random() * (300 - 40 + 1)) + randomY / 6; //puntoY del hilo2
+                        let randomY = Math.floor(Math.random() * (game.world.height-250 )); //puntoY del hilo1
+                        let randomY2 = Math.floor(Math.random() * (game.world.height-200)) + randomY / 10; //puntoY del hilo2
                         catetoY = randomY2 - randomY;
-                        if (randomY < randomY2) {
-                            empty = false;
+                        if (catetoY>1 && catetoY<100) {
                             let web_inclined_thread = game.add.graphics(0, 0);
                             web_inclined_thread.lineStyle(3, 0x800080);
                             web_inclined_thread.moveTo(thread_pos_array[i], randomY); //thread_pos_array[i] es el puntoX del hilo1
@@ -436,7 +431,6 @@ function thread_creator_V2(direction) {
                 let randomY2 = Math.floor(Math.random() * (300 - 40 + 1)) + randomY / 6; //puntoY del hilo2
                 catetoY = randomY2 - randomY;
                 if (randomY < randomY2) {
-                    empty = false;
                     let web_inclined_thread = game.add.graphics(0, 0);
                     web_inclined_thread.lineStyle(3, 0x800080);
                     web_inclined_thread.moveTo(thread_pos_array[i], randomY); //thread_pos_array[i] es el puntoX del hilo1
@@ -460,6 +454,11 @@ function thread_creator_V2(direction) {
             }
     }
 
+if(thread_changer_init.countLiving() === 0){
+    thread_inclined_array_ini= [];
+    thread_inclined_array_fin= [];
+   return thread_creator_V2(true);
+}
     
 }
 
