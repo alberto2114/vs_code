@@ -1,61 +1,28 @@
 
-let game = new Phaser.Game(800, 600, Phaser.AUTO, 'game');
 
-let gameState = {
+let partBState = {
     preload: loadAssets,
     create: initialiseGame,
     update: gameUpdate
 };
 
-let platform;
-let threads;
+
 let threads_inclined;
 let thread_changer;
-let x_thread = 800 / n_webs;
 
-let thread_pos_array;
 let thread_inclined_array_ini = [];
 let thread_inclined_array_fin = [];
-let character;
-let characterIndex;
-let freeInput = true;
-let gameEnd = false;
-let cursors;
-let mouseX;
-
-const DISPAROS_GROUP_SIZE = 10;
-let disparos;
-const VELOCIDAD_DISPARO = 200;
-let fireButton;
-
-let enemies;
-let EThread;
 
 
-const NUM_LEVELS = 3;
-const LEVEL_ENEMY_SPAWN_PROB = [0.5, 0.75, 1];
-const LEVEL_ENEMY_VELOCITY = [200, 300, 350];
-const SCORE_TO_NEXT_LEVEL = 50;
-let heartLives;
 
-var tiempoTexto;
-var tiempoTranscurrido = 0;
-var puntuaje = 0;
-let healthBar = document.getElementById("healthBar");
-let health = 100;
-var textoParte;
-var textoLevel;
-let level = 1;
+const LEVEL_ENEMY_SPAWN_PROB_B = [0.5, 0.75, 1];
+const LEVEL_ENEMY_VELOCITY_B = [20, 220, 235];
+const SCORE_TO_NEXT_LEVEL_B = 50;
+
+
 
 
 var crono = setInterval(actualizarCronometro, 1000);
-
-game.state.add('menu', startState);
-game.state.add('game', gameState);
-//game.state.add('final', finalState);
-//game.state.add('options', optionState);
-
-game.state.start('menu');
 
 function loadAssets() {
     console.log('arrancando');
@@ -64,8 +31,6 @@ function loadAssets() {
     game.load.image('thread', 'assets/string.png');
     game.load.image('purple', 'assets/trajectory_changer.png');
     game.load.spritesheet('character', 'assets/spriteSheet.png', 198.5, 211);
-
-
     game.load.image('disparo', 'assets/ammo.png');
     game.load.image('asteroid', 'assets/asteroid_test.png');
     game.load.image("heart", "assets/heart.png");
@@ -74,13 +39,11 @@ function loadAssets() {
 
 
 function initialiseGame() {
-    game.physics.startSystem(Phaser.Physics.ARCADE);
+    //game.physics.startSystem(Phaser.Physics.ARCADE);
 
     game.add.sprite(0, 0, 'sky');
 
-    //esconder raton
-    //this.input.mouse.disableContextMenu();
-    // this.input.mouse = this.input.mousePointer = this.input.addPointer(1);
+    level=1;
 
     platform = game.add.group();
     platform.enableBody = true;
@@ -95,32 +58,22 @@ function initialiseGame() {
     threads.enableBody = true;
     thread_creator(n_webs);
 
-    //threads_inclined = game.add.group();
-    //threads_inclined.enableBody = true;
-
     thread_changer_init = game.add.group();
     thread_changer_init.enableBody = true;
-
-    //extra_thread_changer_init = gamea.add.group();
-    //extra_thread_changer_init =enableBody = true;
-
     thread_changer_end = game.add.group();
     thread_changer_end.enableBody = true;
+
     thread_creator_V2(true);
-    console.log(thread_inclined_array_fin);
     characterIndex = 0;
-
-
 
     character = game.add.sprite(thread_pos_array[characterIndex] - 37, game.world.height - 101, 'character');
     character.scale.setTo(0.5, 0.5);
     game.physics.arcade.enable(character);
-
     character.animations.add('idle', [0, 1], 2.5, true);
 
     tiempoTexto = this.add.text(3, 10, "00:00:00", { font: "20px Arial", fill: "white", stroke: "black", strokeThickness: 4 });
     textoPuntuaje = this.add.text(3, 40, "Points: 0", { font: "20px Arial", fill: "white", stroke: "black", strokeThickness: 4 });
-    textoParte = this.add.text(739, 10, "Part A", { font: "20px Arial", fill: "white", stroke: "black", strokeThickness: 4 });
+    textoParte = this.add.text(739, 10, "Part B", { font: "20px Arial", fill: "white", stroke: "black", strokeThickness: 4 });
     textoLevel = this.add.text(746, 40, "Lvl " + level, { font: "20px Arial", fill: "white", stroke: "black", strokeThickness: 4 });
 
     crearDisparos(DISPAROS_GROUP_SIZE);
@@ -141,7 +94,7 @@ function initialiseGame() {
     crono = setInterval(actualizarCronometro, 1000);
 }
 function spawnEnemies() {
-    if (Math.random() < LEVEL_ENEMY_SPAWN_PROB[level - 1]) {
+    if (Math.random() < LEVEL_ENEMY_SPAWN_PROB_B[level - 1]) {
         let randomIndex = Math.floor(Math.random() * (n_webs - 1));
         let EThread = thread_pos_array[randomIndex];
     
@@ -151,10 +104,8 @@ function spawnEnemies() {
         enemy.anchor.setTo(0.5, 0.5);
         enemy.isChanging = false;
 
-        enemy.body.velocity.y = LEVEL_ENEMY_VELOCITY[level - 1];
+        enemy.body.velocity.y = LEVEL_ENEMY_VELOCITY_B[level - 1];
     }
-
-    //enemy.body.angularVelocity = 150;
 }
 
 function spawnLives() {
@@ -165,19 +116,16 @@ function spawnLives() {
     lives.scale.setTo(0.02, 0.02);
     lives.anchor.setTo(0.10, 0.5);
 
-    lives.body.velocity.y = LEVEL_ENEMY_VELOCITY[level - 1];
+    lives.body.velocity.y = LEVEL_ENEMY_VELOCITY_B[level - 1];
 }
 
 function crearDisparos(num) {
     disparos = game.add.group();
     disparos.enableBody = true;
     disparos.createMultiple(num, 'disparo');
-    //disparos.callAll('events.onOutofBounds.add','events.onOutOfBounds',resetMember);
     disparos.forEach(function (disparo) {
         disparo.scale.setTo(0.25, 0.25);
     });
-
-
     disparos.setAll('outOfBoundsKill', true);
     disparos.setAll('checkWorldBounds', true);
 }
@@ -194,9 +142,6 @@ function actualizarCronometro() {
     var tiempoTextoFormateado = horas.toString().padStart(2, "0") + ":" + minutos.toString().padStart(2, "0") + ":" + segundos.toString().padStart(2, "0");
     tiempoTexto.setText(tiempoTextoFormateado);
 }
-
-
-
 
 
 function updateHealthBar() {
@@ -217,13 +162,12 @@ function decreaseHealthBar(enemy) {
         updateHealthBar();
         console.log("la barra de vida tiene " + health);
     }
-
 }
 
 
 function gameUpdate() {
     //collisions
-    game.physics.arcade.overlap(enemies, disparos, enemyHit, null, this);
+    game.physics.arcade.overlap(enemies, disparos, enemyHitB, null, this);
     game.physics.arcade.overlap(enemies, platform, decreaseHealthBar, null, this);
     game.physics.arcade.overlap(heartLives, character, liveHit, null, this);
     game.physics.arcade.overlap(enemies, thread_changer_init, changeThread, null, this);
@@ -280,29 +224,21 @@ function changeThread(enemy, thread) {
    
     if(Math.random() < 0.4 && !enemy.isChanging){
         
-        let tween = game.add.tween(enemy).to({x:thread_inclined_array_fin[thread.myValue].x ,y:thread_inclined_array_fin[thread.myValue].y },1000/(n_webs/10),Phaser.Easing.Linear.None,true);
-        
+        let tween = game.add.tween(enemy).to({x:thread_inclined_array_fin[thread.myValue].x ,y:thread_inclined_array_fin[thread.myValue].y },1000/(n_webs/10),Phaser.Easing.Linear.None,true); 
     }
     enemy.isChanging = true;
     
 }
-/*changeThread2(){
-    if(!enemy.isChanging){
-        
-        let tween = game.add.tween(enemy).to({x:thread_inclined_array_fin[thread.myValue].x ,y:thread_inclined_array_fin[thread.myValue].y },1000/(n_webs/10),Phaser.Easing.Linear.None,true);
-    }
-    enemy.isChanging = true;
-}*/
 
-function enemyHit(enemy, disparo) {
+function enemyHitB(enemy, disparo) {
     disparo.kill();
     enemy.kill();
     sumarPuntos();
     var boomAudio = new Audio("assets/songs/boom.mp3");
     boomAudio.play();
 
-    if (level < NUM_LEVELS && puntuaje == level * SCORE_TO_NEXT_LEVEL) {
-        subirLevel();
+    if (level < NUM_LEVELS && puntuaje == level * SCORE_TO_NEXT_LEVEL_B) {
+        subirLevelB();
     }
 
 }
@@ -355,18 +291,17 @@ function sumarPuntos() {
 
 }
 
-function subirLevel() {
+function subirLevelB() {
     level += 1
+    console.log('sube niv');
     textoLevel.setText('Lvl ' + level);
     var levelAudio = new Audio("assets/songs/levelUp.mp3");
     levelAudio.play();
     if(level ==2){
-    thread_creator_V2(false)  
-    console.log(thread_inclined_array_fin);
+    thread_creator_V2(false);
     }
     if (level == 3){
-        thread_creator_V2(true);
-        console.log(thread_inclined_array_fin);
+        thread_creator_V2(true);     
     }
 }
 
