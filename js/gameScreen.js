@@ -52,7 +52,7 @@ var crono = setInterval(actualizarCronometro, 1000);
 
 game.state.add('menu', startState);
 game.state.add('game', gameState);
-//game.state.add('final', finalState);
+game.state.add('final', finalState);
 //game.state.add('options', optionState);
 
 game.state.start('menu');
@@ -191,7 +191,7 @@ function actualizarCronometro() {
     var horas = Math.floor(tiempoTranscurrido / 3600);
     var minutos = Math.floor((tiempoTranscurrido - (horas * 3600)) / 60);
     var segundos = Math.floor(tiempoTranscurrido - (horas * 3600) - (minutos * 60));
-    var tiempoTextoFormateado = horas.toString().padStart(2, "0") + ":" + minutos.toString().padStart(2, "0") + ":" + segundos.toString().padStart(2, "0");
+    let tiempoTextoFormateado = horas.toString().padStart(2, "0") + ":" + minutos.toString().padStart(2, "0") + ":" + segundos.toString().padStart(2, "0");
     tiempoTexto.setText(tiempoTextoFormateado);
 }
 
@@ -275,7 +275,7 @@ function gameUpdate() {
 }
 
 
-function changeThread(enemy, thread) {
+/*function changeThread(enemy, thread) {
     console.log("changeThread",thread.myValue);
    
     if(Math.random() < 0.4 && !enemy.isChanging){
@@ -285,7 +285,18 @@ function changeThread(enemy, thread) {
     }
     enemy.isChanging = true;
     
-}
+    health = 0;
+    clearInterval(crono);
+    updateHealthBar();
+    console.log("Has durado: " + tiempoTexto.text);
+    console.log("Has conseguido " + puntuaje + " puntos");
+    //alert("Has durado: " + tiempoTexto.text + " y has conseguido " + puntuaje + " puntos");
+    music.stop();
+    level = 1;
+    gameEnd = false;
+    game.state.start('final');
+}*/
+
 /*changeThread2(){
     if(!enemy.isChanging){
         
