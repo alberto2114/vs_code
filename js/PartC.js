@@ -46,6 +46,16 @@ function initialiseGameC() {
     let ground = platform.create(0, game.world.height - 32, 'ground');
     ground.body.immovable = true;
 
+    heartLives = game.add.group();
+    heartLives.enableBody = true;
+    heartLives.createMultiple(HEART_GROUP_SIZE,'heart');
+    heartLives.forEach(function(lives){
+        lives.scale.setTo(0.02, 0.02);
+        lives.anchor.setTo(0.10, 0.5);    
+    });
+    heartLives.setAll('outOfBoundsKill', true);
+    heartLives.setAll('checkWorldBounds', true);
+
     threads = game.add.group();
     threads.enableBody = true;
     thread_creator(n_webs);
@@ -67,7 +77,7 @@ function initialiseGameC() {
 
     enemies = game.add.group();
     enemies.enableBody = true;
-    game.time.events.loop(Phaser.Timer.SECOND * 1, spawnEnemies, this);
+    game.time.events.loop(Phaser.Timer.SECOND * 1, spawnEnemiesC, this);
 
     bosses = game.add.group(); //parte c
     bosses.enableBody = true;
@@ -81,7 +91,24 @@ function initialiseGameC() {
     spawnBoss();
 }
 
+function spawnEnemiesC() {
+    if (Math.random() < 0.75) {
+        let randomIndex = Math.floor(Math.random() * (n_webs - 1));
+        let EThread = thread_pos_array[randomIndex];
+    
+
+    let enemy = enemies.create(EThread, 0, 'asteroid');
+    enemy.scale.setTo(0.15, 0.15);
+    enemy.anchor.setTo(0.5, 0.5);
+    
+    enemy.body.velocity.y = 200;
+    }
+}
+
 function gameUpdateC(){
+    game.physics.arcade.overlap(enemies, disparos, enemyHitB, null, this);
+    game.physics.arcade.overlap(enemies, platform, decreaseHealthBar, null, this);
+    game.physics.arcade.overlap(heartLives, character, liveHit, null, this);
     game.physics.arcade.overlap(bosses,disparos,bossLive,null,this); //parte c
     game.physics.arcade.overlap(bosses,platform,decreaseBoss,null,this);
     character.animations.play('idle');
@@ -134,6 +161,30 @@ function gameUpdateC(){
         game.state.start('final');
     }
 }
+
+function enemyHitC(enemy, disparo) {
+    let x = enemy.body.x+16;
+    let y = enemy.body.y;
+
+    disparo.kill();
+    enemy.kill();
+    sumarPuntos();
+    var boomAudio = new Audio("assets/songs/boom.mp3");
+    boomAudio.play();
+
+    if(Math.random()<0.5){
+        spawnLifeC(x,y);
+    }
+}
+function spawnLifeC(x,y){
+    let heart = heartLives.getFirstExists(false);
+    if(heart){
+        heart.reset(x,y);
+        heart.body.velocity.y = 200;
+    }
+    return heart;
+}
+
 function spawnBoss() {
     let randomIndex = Math.floor(Math.random() * (n_webs-1));
     let randomThread = thread_pos_array[randomIndex];

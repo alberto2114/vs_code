@@ -13,10 +13,11 @@ let thread_changer;
 let thread_inclined_array_ini = [];
 let thread_inclined_array_fin = [];
 
+const LEVEL_HEALTH_SPAWN_PROB = [0.3, 0.2, 0.1];
 const LEVEL_ENEMY_SPAWN_PROB_B = [0.5, 0.75, 1];
 const LEVEL_ENEMY_VELOCITY_B = [20, 220, 235];
 const SCORE_TO_NEXT_LEVEL_B = 50;
-const MAX_SCORE_B = 350;
+const MAX_SCORE_B = 35;
 
 function loadAssets() {
     console.log('arrancando B');
@@ -168,8 +169,6 @@ function gameUpdate() {
 
 
 function changeThread(enemy, thread) {
-    console.log("changeThread",thread.myValue);
-   
     if(Math.random() < 0.5 && !enemy.isChanging){
         
         let tween = game.add.tween(enemy).to({x:thread_inclined_array_fin[thread.myValue].x ,y:thread_inclined_array_fin[thread.myValue].y },1000/(n_webs/10),Phaser.Easing.Linear.None,true); 
@@ -191,11 +190,12 @@ function enemyHitB(enemy, disparo) {
     if (level < NUM_LEVELS && puntuaje == level * SCORE_TO_NEXT_LEVEL_B) {
         subirLevelB();
     }
-    if(Math.random()<0.5){
+    if(Math.random()<LEVEL_HEALTH_SPAWN_PROB[level-1]){
         spawnLife(x,y);
     }
 }
 function spawnLifeB(x,y){
+    console.log(LEVEL_ENEMY_SPAWN_PROB_B[level-1]);
     let heart = heartLives.getFirstExists(false);
     if(heart){
         heart.reset(x,y);
@@ -206,7 +206,6 @@ function spawnLifeB(x,y){
 
 function subirLevelB() {
     level += 1
-    console.log('sube niv');
     textoLevel.setText('Lvl ' + level);
     var levelAudio = new Audio("assets/songs/levelUp.mp3");
     levelAudio.play();
