@@ -70,7 +70,7 @@ function initialiseGameC() {
     tiempoTexto = this.add.text(3, 10, "00:00:00", { font: "20px Arial", fill: "white", stroke: "black", strokeThickness: 4 });
     textoPuntuaje = this.add.text(3, 40, "Points: 0", { font: "20px Arial", fill: "white", stroke: "black", strokeThickness: 4 });
     textoPuntuaje.setText("Points: " + puntuaje);
-    textoParte = this.add.text(739, 10, "Part B", { font: "20px Arial", fill: "white", stroke: "black", strokeThickness: 4 });
+    textoParte = this.add.text(739, 10, "Part C", { font: "20px Arial", fill: "white", stroke: "black", strokeThickness: 4 });
     textoLevel = this.add.text(746, 40, "Lvl " + level, { font: "20px Arial", fill: "white", stroke: "black", strokeThickness: 4 });
 
     crearDisparos(DISPAROS_GROUP_SIZE);
@@ -196,7 +196,7 @@ function spawnBoss() {
     boss.scale.setTo(0.4, 0.4);
     boss.anchor.setTo(0.5, 0.5);
     
-    boss.body.velocity.y = 20;
+    boss.body.velocity.y = 35;
     boss.body.angularVelocity = 150;
 }
 
@@ -223,11 +223,22 @@ function bossLive(boss,disparo){
     
 }
 function decreaseBoss(boss) {
-    boss.kill();
-    health-=100;
+
+    let randomIndex = Math.floor(Math.random() * (n_webs-1));
+    let randomThread = thread_pos_array[randomIndex];
+    
+    boss.body.x =randomThread-boss.width/2;
+    boss.body.y = 0;
+    boss.anchor.setTo(0.5, 0.5);
+    health-=30;
+    updateHealthBar();
+    if (health <= 0) {
+        victoria =false;
+        deadBoss =true;
+        failAudio.play();
+    }
     var damageAudio = new Audio("assets/songs/damage.mp3");
     var failAudio = new Audio("assets/songs/Fail.mp3");
     damageAudio.play();
-    failAudio.play();
-    deadBoss = true;
+    
 }
