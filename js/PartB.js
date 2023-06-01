@@ -12,12 +12,12 @@ let thread_changer;
 
 let thread_inclined_array_ini = [];
 let thread_inclined_array_fin = [];
-
+let puntuajeB;
 const LEVEL_HEALTH_SPAWN_PROB = [0.3, 0.2, 0.1];
 const LEVEL_ENEMY_SPAWN_PROB_B = [0.5, 0.75, 1];
-const LEVEL_ENEMY_VELOCITY_B = [20, 220, 235];
-const SCORE_TO_NEXT_LEVEL_B = 50;
-const MAX_SCORE_B = 35;
+const LEVEL_ENEMY_VELOCITY_B = [100, 150, 200];
+const SCORE_TO_NEXT_LEVEL_B = 100;
+const MAX_SCORE_B = 350;
 
 function loadAssets() {
     game.load.image('sky', 'assets/sky1.png');
@@ -39,7 +39,7 @@ function initialiseGame() {
     game.add.sprite(0, 0, 'sky');
 
     level=1;
-
+    puntuajeB=0;
     platform = game.add.group();
     platform.enableBody = true;
 
@@ -160,7 +160,7 @@ function gameUpdate() {
         gameOver();
     }
 
-    if(puntuaje >= MAX_SCORE_B){
+    if(puntuajeB >= MAX_SCORE_B){
         level=1;
         chcharacterIndex = 0;
         game.state.start('partC');
@@ -183,11 +183,12 @@ function enemyHitB(enemy, disparo) {
 
     disparo.kill();
     enemy.kill();
+    puntuajeB +=10;
     sumarPuntos();
     var boomAudio = new Audio("assets/songs/boom.mp3");
     boomAudio.play();
 
-    if (level < NUM_LEVELS && puntuaje == level * SCORE_TO_NEXT_LEVEL_B) {
+    if (level < NUM_LEVELS && puntuajeB == level * SCORE_TO_NEXT_LEVEL_B) {
         subirLevelB();
     }
     if(Math.random()<LEVEL_HEALTH_SPAWN_PROB[level-1]){

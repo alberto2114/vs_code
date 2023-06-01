@@ -30,8 +30,8 @@ let EThread;
 const NUM_LEVELS = 3;
 const LEVEL_ENEMY_SPAWN_PROB = [0.5, 0.75, 1];
 const LEVEL_ENEMY_VELOCITY = [200, 250, 300];
-const SCORE_TO_NEXT_LEVEL = 50;
-const MAX_SCORE_A =30;
+const SCORE_TO_NEXT_LEVEL = 100;
+const MAX_SCORE_A =350;
 
 const HEART_GROUP_SIZE = 3;
 let heartLives;
