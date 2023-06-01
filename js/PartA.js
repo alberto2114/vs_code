@@ -44,7 +44,7 @@ let health = 100;
 let textoParte;
 let textoLevel;
 
-
+let victoria;
 
 let crono = setInterval(actualizarCronometro, 1000);
 
@@ -54,7 +54,7 @@ game.state.add('partB', partBState);
 game.state.add('partC', partCState);
 game.state.add('final', finalState);
 
-game.state.start('partB');
+game.state.start('menu');
 
 function loadAssetsA() {
     game.load.image('sky', 'assets/sky1.png');
@@ -179,6 +179,7 @@ function decreaseHealthBar(enemy) {
     var failAudio = new Audio("assets/songs/Fail.mp3");
     if (health <= 0) {
         damageAudio.play();
+        updateHealthBar();
         gameEnd = true;
     }
     else {
@@ -344,6 +345,7 @@ function thread_creator(n_webs) {
     }
 }
 
-
-
-
+function gameOver() {
+    victoria = false;
+    game.state.start('final');
+}
