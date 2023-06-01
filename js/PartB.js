@@ -93,7 +93,6 @@ function initialiseGame() {
     healthBar.style.display = "block";
     health = 100;
     updateHealthBar();
-    tiempoTranscurrido = 0;
 }
 function spawnEnemiesB() {
     if (Math.random() < LEVEL_ENEMY_SPAWN_PROB_B[level - 1]) {
