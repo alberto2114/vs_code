@@ -16,6 +16,7 @@ let thread_inclined_array_fin = [];
 const LEVEL_ENEMY_SPAWN_PROB_B = [0.5, 0.75, 1];
 const LEVEL_ENEMY_VELOCITY_B = [20, 220, 235];
 const SCORE_TO_NEXT_LEVEL_B = 50;
+const MAX_SCORE_B = 350;
 
 function loadAssets() {
     console.log('arrancando B');
@@ -29,21 +30,11 @@ function loadAssets() {
     game.load.image('disparo', 'assets/ammo.png');
     game.load.image('asteroid', 'assets/enemy1.png');
     game.load.image("heart", "assets/heart.png");
-    game.load.image("finalBoss", "assets/boss.png");
-    game.load.image("finalBoss1", "assets/bossLife/boss1.png");
-    game.load.image("finalBoss2", "assets/bossLife/boss2.png");
-    game.load.image("finalBoss3", "assets/bossLife/boss3.png");
-    game.load.image("finalBoss4", "assets/bossLife/boss11.png");
-    game.load.image("finalBoss5", "assets/bossLife/boss12.png");
-    game.load.image("finalBoss6", "assets/bossLife/boss13.png");
-    game.load.image("finalBoss7", "assets/bossLife/boss21.png");
-    game.load.image("finalBoss8", "assets/bossLife/boss22.png");
 }
 
 
 
 function initialiseGame() {
-    //game.physics.startSystem(Phaser.Physics.ARCADE);
 
     game.add.sprite(0, 0, 'sky');
 
@@ -57,6 +48,16 @@ function initialiseGame() {
 
     let ground = platform.create(0, game.world.height - 32, 'ground');
     ground.body.immovable = true;
+
+    heartLives = game.add.group();
+    heartLives.enableBody = true;
+    heartLives.createMultiple(HEART_GROUP_SIZE,'heart');
+    heartLives.forEach(function(lives){
+        lives.scale.setTo(0.02, 0.02);
+        lives.anchor.setTo(0.10, 0.5);    
+    });
+    heartLives.setAll('outOfBoundsKill', true);
+    heartLives.setAll('checkWorldBounds', true);
 
     threads = game.add.group();
     threads.enableBody = true;
@@ -85,18 +86,14 @@ function initialiseGame() {
 
     enemies = game.add.group();
     enemies.enableBody = true;
-    game.time.events.loop(Phaser.Timer.SECOND * 1, spawnEnemies, this);
-
-    heartLives = game.add.group();
-    heartLives.enableBody = true;
-    game.time.events.loop(Phaser.Timer.SECOND * 21, spawnLives, this);
+    game.time.events.loop(Phaser.Timer.SECOND * 1, spawnEnemiesB, this);
 
 
     healthBar.style.display = "block";
     health = 100;
     updateHealthBar();
 }
-function spawnEnemies() {
+function spawnEnemiesB() {
     if (Math.random() < LEVEL_ENEMY_SPAWN_PROB_B[level - 1]) {
         let randomIndex = Math.floor(Math.random() * (n_webs - 1));
         let EThread = thread_pos_array[randomIndex];
@@ -105,58 +102,11 @@ function spawnEnemies() {
         let enemy = enemies.create(EThread, 0, 'asteroid');
         enemy.scale.setTo(0.15, 0.15);
         enemy.anchor.setTo(0.5, 0.5);
-        //enemy.isChanging = false;
 
         enemy.body.velocity.y = LEVEL_ENEMY_VELOCITY_B[level - 1];
     }
 }
 
-function spawnLives() {
-    let randomIndex = Math.floor(Math.random() * (n_webs - 1));
-    let randomThread = thread_pos_array[randomIndex];
-
-    let lives = heartLives.create(randomThread, 0, 'heart');
-    lives.scale.setTo(0.02, 0.02);
-    lives.anchor.setTo(0.10, 0.5);
-
-    lives.body.velocity.y = LEVEL_ENEMY_VELOCITY_B[level - 1];
-}
-
-function crearDisparos(num) {
-    disparos = game.add.group();
-    disparos.enableBody = true;
-    disparos.createMultiple(num, 'disparo');
-    disparos.forEach(function (disparo) {
-        disparo.scale.setTo(0.3, 0.25);
-    });
-    disparos.setAll('outOfBoundsKill', true);
-    disparos.setAll('checkWorldBounds', true);
-}
-
-function resetMember(item) {
-    item.kill();
-}
-
-
-function updateHealthBar() {
-    healthBar.querySelector('.bar').style.width = health + '%';
-
-}
-function decreaseHealthBar(enemy) {
-    enemy.kill();
-    health -= 20;
-    var damageAudio = new Audio("assets/songs/damage.mp3");
-    var failAudio = new Audio("assets/songs/Fail.mp3");
-    if (health <= 0) {
-        damageAudio.play();
-        gameEnd = true;
-    }
-    else {
-        damageAudio.play();
-        updateHealthBar();
-        console.log("la barra de vida tiene " + health);
-    }
-}
 
 
 function gameUpdate() {
@@ -211,7 +161,7 @@ function gameUpdate() {
         gameOver();
     }
 
-    if(puntuaje >= 100){
+    if(puntuaje >= MAX_SCORE_B){
         game.state.start('final');
     }
 }
@@ -220,7 +170,7 @@ function gameUpdate() {
 function changeThread(enemy, thread) {
     console.log("changeThread",thread.myValue);
    
-    if(Math.random() < 0.4 && !enemy.isChanging){
+    if(Math.random() < 0.5 && !enemy.isChanging){
         
         let tween = game.add.tween(enemy).to({x:thread_inclined_array_fin[thread.myValue].x ,y:thread_inclined_array_fin[thread.myValue].y },1000/(n_webs/10),Phaser.Easing.Linear.None,true); 
     }
@@ -229,6 +179,9 @@ function changeThread(enemy, thread) {
 }
 
 function enemyHitB(enemy, disparo) {
+    let x = enemy.body.x+16;
+    let y = enemy.body.y;
+
     disparo.kill();
     enemy.kill();
     sumarPuntos();
@@ -238,55 +191,17 @@ function enemyHitB(enemy, disparo) {
     if (level < NUM_LEVELS && puntuaje == level * SCORE_TO_NEXT_LEVEL_B) {
         subirLevelB();
     }
-
-}
-
-function liveHit(lives, character) {
-    character.kill();
-    health = 100;
-    updateHealthBar();
-    var liveAudio = new Audio("assets/songs/Health.mp3");
-    liveAudio.play();
-
-}
-
-function manageShots() {
-    if (fireButton.justDown && !boolmouse) {
-        fireShot();
-    }
-
-    else if (game.input.mousePointer.leftButton.justPressed(30) && boolmouse) {
-        fireShot();
+    if(Math.random()<0.5){
+        spawnLife(x,y);
     }
 }
-
-function fireShot() {
-    let shotX = character.x + 3 + character.width / 4;
-    let shotY = character.y + -40;
-    let shotVel = -VELOCIDAD_DISPARO;
-    let shot = kaboom(shotX, shotY, shotVel);
-    var shootAudio = new Audio("assets/songs/Shoot.mp3");
-    shootAudio.play();
-}
-
-function kaboom(x, y, vel) {
-    let shot = disparos.getFirstExists(false);
-    if (shot) {
-        shot.reset(x, y);
-        shot.body.velocity.y = vel;
+function spawnLifeB(x,y){
+    let heart = heartLives.getFirstExists(false);
+    if(heart){
+        heart.reset(x,y);
+        heart.body.velocity.y = LEVEL_ENEMY_VELOCITY_B[level-1];
     }
-    return shot;
-}
-
-function inputChorno() {
-    freeInput = true;
-}
-
-//Alberto
-function sumarPuntos() {
-    puntuaje += 10;
-    textoPuntuaje.setText("Points: " + puntuaje);
-
+    return heart;
 }
 
 function subirLevelB() {
@@ -303,20 +218,6 @@ function subirLevelB() {
     }
 }
 
-function thread_creator(n_webs) {
-    let thread_pos = game.world.width / n_webs;
-    thread_pos_array = [thread_pos];
-
-    for (let i = 1; i < n_webs; i++) {
-        let web_thread = threads.create(thread_pos, 0, 'thread');
-        web_thread.anchor.setTo(0.5, 0);
-        web_thread.body.immovable = true;
-
-        thread_pos = thread_pos + (game.world.width / n_webs);
-        thread_pos_array.push(thread_pos);
-    }
-    console.log(n_webs);
-}
 
 function thread_creator_V2(direction) {
     let catetoX = 800 / n_webs;

@@ -31,8 +31,9 @@ const NUM_LEVELS = 3;
 const LEVEL_ENEMY_SPAWN_PROB = [0.5, 0.75, 1];
 const LEVEL_ENEMY_VELOCITY = [200, 250, 300];
 const SCORE_TO_NEXT_LEVEL = 50;
-const MAX_SCORE_A =20;
+const MAX_SCORE_A =30;
 
+const HEART_GROUP_SIZE = 3;
 let heartLives;
 let level;
 let tiempoTexto;
@@ -52,7 +53,6 @@ game.state.add('game', partAState);
 game.state.add('partB', partBState);
 game.state.add('partC', partCState);
 game.state.add('final', finalState);
-//game.state.add('options', optionState);
 
 game.state.start('menu');
 
@@ -68,15 +68,6 @@ function loadAssetsA() {
     game.load.image('disparo', 'assets/ammo.png');
     game.load.image('asteroid', 'assets/enemy1.png');
     game.load.image("heart", "assets/heart.png");
-    /*game.load.image("finalBoss", "assets/boss.png");
-    game.load.image("finalBoss1", "assets/bossLife/boss1.png");
-    game.load.image("finalBoss2", "assets/bossLife/boss2.png");
-    game.load.image("finalBoss3", "assets/bossLife/boss3.png");
-    game.load.image("finalBoss4", "assets/bossLife/boss11.png");
-    game.load.image("finalBoss5", "assets/bossLife/boss12.png");
-    game.load.image("finalBoss6", "assets/bossLife/boss13.png");
-    game.load.image("finalBoss7", "assets/bossLife/boss21.png");
-    game.load.image("finalBoss8", "assets/bossLife/boss22.png");*/
 }
 
 
@@ -121,10 +112,13 @@ function initialiseGameA() {
 
     heartLives = game.add.group();
     heartLives.enableBody = true;
-    game.time.events.loop(Phaser.Timer.SECOND * 21, spawnLives, this);
-
-    //bosses = game.add.group();
-    //bosses.enableBody = true;
+    heartLives.createMultiple(HEART_GROUP_SIZE,'heart');
+    heartLives.forEach(function(lives){
+        lives.scale.setTo(0.02, 0.02);
+        lives.anchor.setTo(0.10, 0.5);    
+    });
+    heartLives.setAll('outOfBoundsKill', true);
+    heartLives.setAll('checkWorldBounds', true);
 
     healthBar.style.display = "block";
     health = 100;
@@ -147,16 +141,6 @@ function spawnEnemies() {
     }
 }
 
-function spawnLives() {
-    let randomIndex = Math.floor(Math.random() * (n_webs - 1));
-    let randomThread = thread_pos_array[randomIndex];
-
-    let lives = heartLives.create(randomThread, 0, 'heart');
-    lives.scale.setTo(0.02, 0.02);
-    lives.anchor.setTo(0.10, 0.5);
-
-    lives.body.velocity.y = LEVEL_ENEMY_VELOCITY[level - 1];
-}
 
 function crearDisparos(num) {
     disparos = game.add.group();
@@ -265,6 +249,9 @@ function gameUpdateA() {
 
 function enemyHit(enemy, disparo) {
     
+    let x = enemy.body.x+16;
+    let y = enemy.body.y;
+    
     disparo.kill();
     enemy.kill();
     sumarPuntos();
@@ -274,9 +261,18 @@ function enemyHit(enemy, disparo) {
     if (level < NUM_LEVELS && puntuaje == level * SCORE_TO_NEXT_LEVEL) {
         subirLevel();
     }
-    
-    
+    if(Math.random()<0.1){
+            spawnLife(x,y);
+        }
+}
 
+function spawnLife(x,y){
+    let heart = heartLives.getFirstExists(false);
+    if(heart){
+        heart.reset(x,y);
+        heart.body.velocity.y = LEVEL_ENEMY_VELOCITY[level-1];
+    }
+    return heart;
 }
 
 function liveHit(lives, character) {
