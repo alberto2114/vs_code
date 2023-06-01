@@ -342,7 +342,6 @@ function thread_creator(n_webs) {
         thread_pos = thread_pos + (game.world.width / n_webs);
         thread_pos_array.push(thread_pos);
     }
-    console.log(n_webs);
 }
 
 
