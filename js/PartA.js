@@ -239,6 +239,7 @@ function gameUpdateA() {
     }
     if(puntuaje == MAX_SCORE_A){
         level =1;
+        characterIndex = 0;
         game.state.start('partB');
     }
 }

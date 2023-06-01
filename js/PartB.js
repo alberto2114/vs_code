@@ -63,6 +63,7 @@ function initialiseGame() {
     threads.enableBody = true;
     thread_creator(n_webs);
 
+    
     thread_changer_init = game.add.group();
     thread_changer_init.enableBody = true;
     thread_changer_end = game.add.group();
@@ -160,6 +161,8 @@ function gameUpdate() {
     }
 
     if(puntuaje >= MAX_SCORE_B){
+        level=1;
+        chcharacterIndex = 0;
         game.state.start('partC');
     }
 }

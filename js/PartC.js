@@ -155,6 +155,8 @@ function gameUpdateC(){
     }
 
     if(deadBoss){
+        level =1;
+        characterIndex = 0;
         game.state.start('final');
     }
 }
