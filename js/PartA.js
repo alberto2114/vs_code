@@ -57,7 +57,6 @@ game.state.add('final', finalState);
 game.state.start('partB');
 
 function loadAssetsA() {
-    console.log('arrancando A');
     game.load.image('sky', 'assets/sky1.png');
     game.load.image('ground', 'assets/ground.png');
     game.load.image('thread', 'assets/string.png');
@@ -185,7 +184,6 @@ function decreaseHealthBar(enemy) {
     else {
         damageAudio.play();
         updateHealthBar();
-        console.log("la barra de vida tiene " + health);
     }
 
 }
@@ -220,7 +218,6 @@ function gameUpdateA() {
     else {
         if (cursors.left.isDown && characterIndex > 0 && freeInput == true) {
             //left movement
-            console.log('left');
             characterIndex--;
             character.body.position.setTo(thread_pos_array[characterIndex] - 50, game.world.height - 101);
 
@@ -228,7 +225,6 @@ function gameUpdateA() {
             game.time.events.add(650/n_webs, inputChorno, this);
         } else if (cursors.right.isDown && characterIndex < n_webs - 2 && freeInput == true) {
             //right movement
-            console.log('right');
             characterIndex++;
             character.body.position.setTo(thread_pos_array[characterIndex] - 50, game.world.height - 101);
             character.animations.play('character2');

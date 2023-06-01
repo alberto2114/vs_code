@@ -20,7 +20,6 @@ const SCORE_TO_NEXT_LEVEL_B = 50;
 const MAX_SCORE_B = 35;
 
 function loadAssets() {
-    console.log('arrancando B');
     game.load.image('sky', 'assets/sky1.png');
     game.load.image('ground', 'assets/ground.png');
     game.load.image('thread', 'assets/string.png');
@@ -140,7 +139,6 @@ function gameUpdate() {
     else {
         if (cursors.left.isDown && characterIndex > 0 && freeInput == true) {
             //left movement
-            console.log('left');
             characterIndex--;
             character.body.position.setTo(thread_pos_array[characterIndex] - 50, game.world.height - 101);
 
@@ -148,7 +146,6 @@ function gameUpdate() {
             game.time.events.add(650/n_webs, inputChorno, this);
         } else if (cursors.right.isDown && characterIndex < n_webs - 2 && freeInput == true) {
             //right movement
-            console.log('right');
             characterIndex++;
             character.body.position.setTo(thread_pos_array[characterIndex] - 50, game.world.height - 101);
             character.animations.play('character2');
@@ -195,7 +192,6 @@ function enemyHitB(enemy, disparo) {
     }
 }
 function spawnLifeB(x,y){
-    console.log(LEVEL_ENEMY_SPAWN_PROB_B[level-1]);
     let heart = heartLives.getFirstExists(false);
     if(heart){
         heart.reset(x,y);
