@@ -87,7 +87,7 @@ function initialiseGameC() {
     healthBar.style.display = "block";
     health = 100;
     updateHealthBar();
-
+    tiempoTranscurrido = 0;
     spawnBoss();
 }
 
