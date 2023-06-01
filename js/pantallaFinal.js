@@ -8,6 +8,7 @@ let finalState = {
 //let fondo;
 let survivedTime;
 let survivedPoints;
+let victory;
 
 let leaderboard = [];
 let leaderboardPoints = [];
@@ -29,6 +30,7 @@ function preloadAssets() {
 }
 
 function initializeGame() {
+    healthBar.style.display = 'none';
 
     fondo = game.add.tileSprite(0, 0, 1920, 962, 'background');
     fondo.z=-10;
@@ -93,20 +95,40 @@ function initializeGame() {
 
     survivedTime = game.add.text(game.world.width/2 + 70, 180, 'Final Time',
     {font: '16px Fantasy',
-    fill: '#000000',
-    align: 'center'});
+        fill: '#FFFFFF',
+        backgroundColor: '#e86a17',
+        stroke: '#000000',
+        strokeThickness: 6,
+        align: 'center'});
     survivedTime.anchor.setTo(0.5);
 
     survivedPoints = game.add.text(game.world.width/2 + 190, 180, 'Final Points',
     {font: '16px Fantasy',
-    fill: '#000000',
-    align: 'center'});
+        fill: '#FFFFFF',
+        backgroundColor: '#e86a17',
+        stroke: '#000000',
+        strokeThickness: 6,
+        align: 'center'});
     survivedPoints.anchor.setTo(0.5);
 
     //mostrarLeaderboard();
-    game.time.events.add(Phaser.Timer.SECOND * 20, function() {
-        game.state.start('menu');});
+    game.time.events.add(Phaser.Timer.SECOND * 20, function() {game.state.start('menu');});
 
+    if(victoria){
+        var victorioso = 'You Lost!';
+    }
+    else{
+        var victorioso = 'You Win!';
+    }
+
+    victory = game.add.text(game.world.width/2, 30, victorioso,
+    {font: '64px Fantasy',
+        fill: '#FFFFFF',
+        stroke: '#000000',
+        strokeThickness: 6,
+        align: 'center'});
+    victory.anchor.setTo(0.5);
+    
     actualizarLeaderboard(tiempoTexto.text);
     actualizarLeaderboardPoints(puntuaje);
     captureEnterKey();

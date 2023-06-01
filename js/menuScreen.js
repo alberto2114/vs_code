@@ -44,6 +44,7 @@ function preloadAssets() {
     game.load.image('menuBox', 'assets/ui/red_button11.png');
     game.load.image('sliderBar', 'assets/ui/grey_sliderHorizontal.png');
     game.load.image('sliderCheck', 'assets/ui/grey_sliderDown.png');
+    game.load.image('smallpanel', 'assets/ui/red_button11.png');
 
     game.load.image('buttonCheck_NO', 'assets/ui/grey_boxCheckmark.png');
     game.load.image('buttonCheck_YES', 'assets/ui/red_boxCheckmark.png');
@@ -54,10 +55,7 @@ function preloadAssets() {
     game.load.image('mouseOption', 'assets/ui/mouse.png');
     game.load.image('keyboardOption', 'assets/ui/gamepad.png');
 
-
-
     //Music in the background thanks to https://www.FesliyanStudios.com
-
     //Tittle: Retro Platforming - David Fesliyan
     game.load.audio('music', ['assets/music/platformer.mp3']);
 }
@@ -149,12 +147,58 @@ function initializeGame() {
     let button = game.add.button(130, 500, '', changePlay);
     button.addChild(game.add.text(0, 0, "START GAME", {fontSize: '32px', fill: '#FFFFFF', backgroundColor: '#ADD8E6', hoverColor: '#87CEFA', padding:{x: 16, y: 8}}));
 
-    
-
-
     //buttonPlay = new Button(0.5,0.45,'playButton', changePlay);
     //playButton = game.add.button(game.world.centerX, game.world.centerY, 'playButton', this.changePlay, this);
 
+    var panelButtonPartA = game.add.sprite(135, 222, 'smallpanel');
+    panelButtonPartA.anchor.setTo(0.5);
+    panelButtonPartA.scale.setTo(1.05, 0.8);
+    panelButtonPartA.inputEnabled = true;
+    panelButtonPartA.events.onInputDown.add(playPartA, this);
+    var partAtext = game.add.text(95, 200, 'Part A',
+        {font: '30px Fantasy',
+        fill: '#FFFFFF',
+        stroke: '#000000',
+        strokeThickness: 6,
+        align: 'center'});
+
+    var panelButtonPartB = game.add.sprite(135, game.world.height/2 - 5, 'smallpanel');
+    panelButtonPartB.anchor.setTo(0.5);
+    panelButtonPartB.scale.setTo(1.05, 0.8);
+    panelButtonPartB.inputEnabled = true;
+    panelButtonPartB.events.onInputDown.add(playPartB, this);
+    var partBtext = game.add.text(95, game.world.height/2 - 25, 'Part B',
+        {font: '30px Fantasy',
+        fill: '#FFFFFF',
+        stroke: '#000000',
+        strokeThickness: 6,
+        align: 'center'});
+
+    var panelButtonPartC = game.add.sprite(135, game.world.height/2 + 65, 'smallpanel');
+    panelButtonPartC.anchor.setTo(0.5);
+    panelButtonPartC.scale.setTo(1.05, 0.8);
+    panelButtonPartC.inputEnabled = true;
+    panelButtonPartC.events.onInputDown.add(playPartC, this);
+    var partCtext = game.add.text(95, game.world.height/2 + 43, 'Part C',
+        {font: '30px Fantasy',
+        fill: '#FFFFFF',
+        stroke: '#000000',
+        strokeThickness: 6,
+        align: 'center'});
+
+    var groupName = game.add.text(380, 109, 'by Pepe Viyuela',
+        {font: '30px Fantasy',
+        fill: '#FFFFFF',
+        stroke: '#000000',
+        strokeThickness: 6,
+        align: 'center'});
+
+    var groupMembers = game.add.text(590, 90, 'Pau Martinez Fortuny\nJaime Perez Villena\nAlberto Valls Martinez',
+        {font: '20px Fantasy',
+        fill: '#FFFFFF',
+        stroke: '#000000',
+        strokeThickness: 6,
+        align: 'center'});
 }
 
 function changePlay() {
@@ -270,3 +314,15 @@ function handleSliderCheck() {
         sliderValueText.destroy();});
     //console.log(game.n_webs);
   }
+
+function playPartA(){
+    game.state.start('game');
+}
+
+function playPartB(){
+    game.state.start('partB');
+}
+
+function playPartC(){
+    game.state.start('partC');
+}

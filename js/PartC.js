@@ -36,6 +36,7 @@ function initialiseGameC() {
 
     level=4;
     vidaBoss=100;
+    deadBoss = false;
 
     platform = game.add.group();
     platform.enableBody = true;
@@ -154,7 +155,9 @@ function bossLive(boss,disparo){
     var hitBoss = new Audio("assets/songs/hitBoss.mp3");
     if(vidaBoss<=0){
         deadBoss = true;
+        victoria = true;
         boss.kill();
+        gameOver();
     }
     if(vidaBoss<=90){boss.loadTexture("finalBoss1");}
     if(vidaBoss<=80){boss.loadTexture("finalBoss2");}
