@@ -54,7 +54,7 @@ game.state.add('partB', partBState);
 game.state.add('partC', partCState);
 game.state.add('final', finalState);
 
-game.state.start('menu');
+game.state.start('partC');
 
 function loadAssetsA() {
     console.log('arrancando A');

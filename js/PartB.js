@@ -162,7 +162,7 @@ function gameUpdate() {
     }
 
     if(puntuaje >= MAX_SCORE_B){
-        game.state.start('final');
+        game.state.start('partC');
     }
 }
 
