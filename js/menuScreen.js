@@ -62,7 +62,7 @@ function preloadAssets() {
 
 function initializeGame() {
 
-
+    gameEnd = false;
 
     fondo=game.add.tileSprite(0 ,0 , 1920, 962, 'sky');
     fondo.z=-10;

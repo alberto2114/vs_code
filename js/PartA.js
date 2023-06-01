@@ -44,7 +44,7 @@ let health = 100;
 let textoParte;
 let textoLevel;
 
-let victoria;
+let victoria = false;
 
 let crono = setInterval(actualizarCronometro, 1000);
 
@@ -346,6 +346,5 @@ function thread_creator(n_webs) {
 }
 
 function gameOver() {
-    victoria = false;
     game.state.start('final');
 }

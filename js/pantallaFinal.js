@@ -114,12 +114,12 @@ function initializeGame() {
     //mostrarLeaderboard();
     game.time.events.add(Phaser.Timer.SECOND * 20, function() {game.state.start('menu');});
 
-    if(victoria){
-        var victorioso = 'You Lost!';
-    }
-    else{
+    if(victoria == true){
         var victorioso = 'You Win!';
+        console.log('deberia ganar');
     }
+    else { var victorioso = 'You Lost!';
+            console.log('deberia perder')}
 
     victory = game.add.text(game.world.width/2, 30, victorioso,
     {font: '64px Fantasy',
